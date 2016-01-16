@@ -1,0 +1,19 @@
+{
+  "name": "blacksquid",
+  "description": "Directory Website",
+  "main": "index.js",
+  "authors": [
+    "Panca Sutresna"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.2.0",
+    "toastr": "~2.1.2",
+    "angular": "~1.4.8",
+    "angular-resource": "~1.4.8",
+    "angular-route": "~1.4.8"
+  }
+}
