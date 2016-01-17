@@ -1,2 +1,10 @@
-h1 This is a partials
-h2 {{ myVar }}
+.container
+    .jumbotron
+        h1 disini.id
+
+    .row
+        .col-md-12
+            div(ng-include="'/partials/featured'")
+    .row
+        .col-md-12
+            div(ng-include="'/partials/new'")

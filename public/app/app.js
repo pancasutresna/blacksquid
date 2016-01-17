@@ -14,14 +14,10 @@
             $routeProvider
                 .when('/', {
                     templateUrl: '/partials/main',
-                    controller: 'mainCtrl'
+                    controller: 'mvMainCtrl'
                 });
         });
 
-    angular
-        .module('app')
-        .controller('mainCtrl', function($scope){
-            $scope.myVar = "Hello Angular";
-        });
+
 
 })();
