@@ -1,15 +1,31 @@
 {
   "name": "blacksquid",
   "version": "1.0.0",
+  "private": true,
   "description": "Directory Website",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
+  },
+  "engines": {
+      "node": "5.3.x",
+      "npm": "3.3.x"
   },
   "author": "Panca Sutresna",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.14.2",
     "express": "^4.13.3",
-    "jade": "^1.11.0"
+    "jade": "^1.11.0",
+    "kerberos": "0.0.17",
+    "mongodb": "^2.1.4",
+    "mongoose": "^4.3.6",
+    "morgan": "^1.6.1",
+    "multer": "^1.1.0",
+    "node-sass": "^3.4.2",
+    "node-sass-middleware": "^0.9.7"
+  },
+  "devDependencies": {
+    "node-sass": "^3.4.2"
   }
 }
