@@ -43,8 +43,9 @@ db.once('open', function callback(){
 var messageSchema = mongoose.Schema({message: String});
 var Message = mongoose.model('Message', messageSchema);
 
-app.get('/partials/:partialPath', function(req, res){
-    res.render('partials/' + req.params.partialPath);
+// Angular partials setup
+app.get('/partials/*', function(req, res){
+    res.render('partials/' + req.params[0]);
 });
 
 app.get('*', function(req, res){

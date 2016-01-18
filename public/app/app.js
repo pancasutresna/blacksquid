@@ -13,7 +13,7 @@
 
             $routeProvider
                 .when('/', {
-                    templateUrl: '/partials/main',
+                    templateUrl: '/partials/main/content-main',
                     controller: 'mvMainCtrl'
                 });
         });

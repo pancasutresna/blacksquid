@@ -8,8 +8,8 @@
     "start": "node ./bin/www"
   },
   "engines": {
-      "node": "5.3.x",
-      "npm": "3.3.x"
+    "node": "5.3.x",
+    "npm": "3.3.x"
   },
   "author": "Panca Sutresna",
   "license": "ISC",
