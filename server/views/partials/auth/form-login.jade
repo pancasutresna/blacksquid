@@ -5,3 +5,12 @@
         .form-group
             input.form-control(type="password", placeholder="Password", ng-model="password")
         button.btn.btn-primary(ng-click="signin(username, password)") Signin
+    
+    ul.nav.navbar-nav.navbar-right(ng-show="user.isAuthenticated()")
+        li.dropdown
+            a.dropdown-toggle(href="", data-toggle="dropdown")
+                | {{ user.currentUser.firstName + " " + user.currentUser.lastName }}
+                b.caret
+            ul.dropdown-menu
+                li
+                    a(href="", ng-click="signout()") Sign Out
