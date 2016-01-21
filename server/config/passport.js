@@ -5,6 +5,7 @@ var User = mongoose.model('User');
 
 module.exports = function(){
 
+    // Passport definition
     passport.use(new LocalStrategy(
         function(username, password, done){
             console.log('username is :' + username);
@@ -20,12 +21,14 @@ module.exports = function(){
         }
     ));
 
+    // Serialize method
     passport.serializeUser(function(user, done){
         if(user){
             done(null, user._id);
         }
     });
 
+    // Deserialize method
     passport.deserializeUser(function(id, done){
         User.findOne({_id:id}).exec(function(err, user){
             if(user){
