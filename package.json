@@ -5,7 +5,8 @@
   "description": "Directory Website",
   "main": "server.js",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "karma start --browsers PhantomJS"
   },
   "engines": {
     "node": "5.3.x",
@@ -31,6 +32,23 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "node-sass": "^3.4.2"
+    "chai": "^3.4.1",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.19",
+    "karma-chai": "^0.1.0",
+    "karma-chai-plugins": "^0.6.1",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-coverage": "^0.5.3",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-html2js-preprocessor": "^0.1.0",
+    "karma-ie-launcher": "^0.2.0",
+    "karma-jasmine": "^0.3.6",
+    "karma-mocha": "^0.2.1",
+    "karma-phantomjs-launcher": "^0.2.3",
+    "mocha": "^2.3.4",
+    "node-sass": "^3.4.2",
+    "phantomjs": "^1.9.19",
+    "requirejs": "^2.1.22",
+    "sinon-chai": "^2.8.0"
   }
 }

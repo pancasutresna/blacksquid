@@ -3,8 +3,8 @@
 
     angular
         .module('app')
-        .controller('mvLoginCtrl', function($scope, $http, mvUser, mvNotifier, mvAuth, $location){
-            $scope.user = mvUser;
+        .controller('mvLoginCtrl', function($scope, $http, mvIdentity, mvNotifier, mvAuth, $location){
+            $scope.identity = mvIdentity;
             $scope.signin = function(username, password){
                 mvAuth.authenticateUser(username, password).then(function(success){
                     if(success){
