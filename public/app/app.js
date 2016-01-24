@@ -46,6 +46,10 @@
                 .when('/places', {
                     templateUrl: '/partials/place/place-list',
                     controller: 'mvPlaceListCtrl'
+                })
+                .when('/places/:id', {
+                    templateUrl: '/partials/place/place-detail',
+                    controller: 'mvPlaceDetailCtrl'
                 });
         });
 

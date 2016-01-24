@@ -11,6 +11,7 @@ module.exports = function(app){
      app.put('/api/users', userCtrl.updateUser);
 
      app.get('/api/places', placeCtrl.getPlaces);
+     app.get('/api/places/:id', placeCtrl.getPlaceById);
 
     // Angular partials setup
     app.get('/partials/*', function(req, res){
