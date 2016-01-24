@@ -8,6 +8,7 @@ module.exports = function(app){
      app.get('/api/users', auth.requiresRole('admin'), userCtrl.getUsers);
 
      app.post('/api/users', userCtrl.createUser);
+     app.put('/api/users', userCtrl.updateUser);
 
     // Angular partials setup
     app.get('/partials/*', function(req, res){
