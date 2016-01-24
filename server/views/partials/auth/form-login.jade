@@ -5,9 +5,11 @@
         .form-group
             input.form-control(type="password", placeholder="Password", ng-model="password")
         button.btn.btn-primary(ng-click="signin(username, password)") Signin
+        | &nbsp;
+        a.btn.btn-default(href="/signup") Sign up
     
     ul.nav.navbar-nav.navbar-right(ng-show="identity.isAuthenticated()")
-        li.dropdown
+        li.dropdown 
             a.dropdown-toggle(href="", data-toggle="dropdown")
                 | {{ identity.currentUser.firstName + " " + identity.currentUser.lastName }}
                 b.caret

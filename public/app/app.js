@@ -28,6 +28,10 @@
                     templateUrl: '/partials/admin/user-list',
                     controller: 'mvAdminUserListCtrl',
                     resolve: routeRoleChecks.admin
+                })
+                .when('/signup', {
+                    templateUrl: '/partials/auth/form-signup',
+                    controller: 'mvSignupCtrl'
                 });
         });
 

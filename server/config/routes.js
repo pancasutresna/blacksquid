@@ -1,14 +1,13 @@
 var auth = require('./auth');
+var userCtrl = require('../controller/userCtrl');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
 module.exports = function(app){
 
-     app.get('/api/users', auth.requiresRole('admin'), function(req, res){
-         User.find({}).exec(function(err, collection){
-             res.send(collection);
-         });
-     });
+     app.get('/api/users', auth.requiresRole('admin'), userCtrl.getUsers);
+
+     app.post('/api/users', userCtrl.createUser);
 
     // Angular partials setup
     app.get('/partials/*', function(req, res){
