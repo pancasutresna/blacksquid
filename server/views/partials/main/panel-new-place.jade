@@ -3,4 +3,4 @@
     .panel-body
         .row(ng-repeat="place in places | filter:{order_by:published} | limitTo:10")
             .col-md-3 {{place.published | date:'MMM d'}}
-            .col-md-9 {{place.name}}
+            .col-md-9 {{place.title}}

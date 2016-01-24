@@ -42,6 +42,10 @@
                     templateUrl: '/partials/auth/form-profile',
                     controller: 'mvProfileCtrl',
                     resolve: routeRoleChecks.user
+                })
+                .when('/places', {
+                    templateUrl: '/partials/place/place-list',
+                    controller: 'mvPlaceListCtrl'
                 });
         });
 

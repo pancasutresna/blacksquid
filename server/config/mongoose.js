@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var userModel = require('../model/User');
+var placeModel = require('../model/Place');
 
 module.exports = function(config){
     mongoose.connect(config.db);
@@ -10,4 +11,5 @@ module.exports = function(config){
     });
 
     userModel.createDefaultUsers();
+    placeModel.createDefaultPlaces();
 }

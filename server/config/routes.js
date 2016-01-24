@@ -1,14 +1,16 @@
 var auth = require('./auth');
 var userCtrl = require('../controller/userCtrl');
+var placeCtrl = require('../controller/placeCtrl');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
 module.exports = function(app){
 
      app.get('/api/users', auth.requiresRole('admin'), userCtrl.getUsers);
-
      app.post('/api/users', userCtrl.createUser);
      app.put('/api/users', userCtrl.updateUser);
+
+     app.get('/api/places', placeCtrl.getPlaces);
 
     // Angular partials setup
     app.get('/partials/*', function(req, res){
@@ -20,6 +22,11 @@ module.exports = function(app){
     app.post('/logout', function(req, res){
         req.logout();
         res.end();
+    });
+
+    // handle all request to api, return 404 if requested through browsers
+    app.all('/api/*', function(req, res){
+        res.send(404);
     });
 
     app.get('*', function(req, res){
