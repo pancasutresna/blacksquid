@@ -12,5 +12,6 @@
                 th Publish Date
         tbody
             tr(ng-repeat="place in places | filter:searchText | orderBy: sortOrder")
-                td {{ place.title }}
+                td 
+                    a(href="/places/{{ place._id }}") {{ place.title }}
                 td {{ place.published | date }}
