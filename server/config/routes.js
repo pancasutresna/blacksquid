@@ -7,6 +7,7 @@ var User = mongoose.model('User');
 module.exports = function(app){
 
      app.get('/api/users', auth.requiresRole('admin'), userCtrl.getUsers);
+     // test comment
      app.post('/api/users', userCtrl.createUser);
      app.put('/api/users', userCtrl.updateUser);
 
