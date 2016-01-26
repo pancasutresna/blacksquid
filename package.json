@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "debug": "^2.2.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.19",
     "karma-chai": "^0.1.0",
