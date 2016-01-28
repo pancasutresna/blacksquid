@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('app.auth')
         .factory('mvIdentity', function($window, mvUser){
 
             var currentUser;

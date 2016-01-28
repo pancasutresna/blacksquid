@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('app.place')
         .controller('mvPlaceListCtrl', function($scope, mvCachedPlace){
             $scope.places = mvCachedPlace.query();
 

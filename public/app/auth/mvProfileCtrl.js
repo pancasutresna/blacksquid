@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('app')
-        .controller('mvProfileCtrl', function($scope, mvAuth, mvIdentity, mvNotifier){
+        .module('app.auth')
+        .controller('mvProfileCtrl', function($scope, mvAuth, mvIdentity, logger){
             $scope.email = mvIdentity.currentUser.username;
             $scope.firstName = mvIdentity.currentUser.firstName;
             $scope.lastName = mvIdentity.currentUser.lastName;
@@ -21,9 +21,9 @@
                 }
 
                 mvAuth.updateCurrentUser(newUserData).then(function(){
-                    mvNotifier.notify('Your user account has been updated');
+                    logger.info('Your user account has been updated');
                 }, function(reason){
-                    mvNotifier.error(reason);
+                    logger.error(reason);
                 });
 
             }

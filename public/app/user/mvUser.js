@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('app.user')
         .factory('mvUser', function($resource){
             var UserResource = $resource('/api/users/:id', {
                 _id: "@id"

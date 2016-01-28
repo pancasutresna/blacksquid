@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app')
+        .module('app.place')
         .factory('mvPlace', function($resource){
             // _id is used in the mvPlaceDetailCtrl
             var placeResource = $resource('/api/places/:_id', {_id: "@id"}, {

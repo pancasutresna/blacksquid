@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    angular.module('app').factory('mvAuth', function($http, $q, mvIdentity, mvUser){
+    angular.module('app.auth').factory('mvAuth', function($http, $q, mvIdentity, mvUser){
         return {
             createUser: function(newUserData){
                 var newUser = new mvUser(newUserData);

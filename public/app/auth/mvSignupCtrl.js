@@ -2,8 +2,8 @@
     'use strict';
 
     angular
-        .module('app')
-        .controller('mvSignupCtrl', function($scope, mvAuth, mvNotifier, $location){
+        .module('app.auth')
+        .controller('mvSignupCtrl', function($scope, mvAuth, logger, $location){
 
             $scope.signup = function(){
                 var newUserData = {
@@ -14,10 +14,10 @@
                 };
 
                 mvAuth.createUser(newUserData).then(function(){
-                    mvNotifier.notify('New user created!');
+                    logger.info('New user created!');
                     $location.path('/');
                 }, function(reason){
-                    mvNotifier.error(reason);
+                    logger.error(reason);
                 });
             }
         });

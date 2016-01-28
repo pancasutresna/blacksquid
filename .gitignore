@@ -1,4 +1,6 @@
+.idea/
 .vagrant/
 node_modules/
+coverage/
 Vagrantfile
 *.log.*
