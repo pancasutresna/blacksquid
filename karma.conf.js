@@ -26,19 +26,19 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        'public/vendor/angular/angular.js',
-        'public/vendor/angular-resource/angular-resource.js',
-        'public/vendor/angular-mocks/angular-mocks.js',
-        'public/vendor/toastr/toastr.js',
+        'client/vendor/angular/angular.js',
+        'client/vendor/angular-resource/angular-resource.js',
+        'client/vendor/angular-mocks/angular-mocks.js',
+        'client/vendor/toastr/toastr.js',
         'test/test-app.js',
-        'public/app/**/*.js',
+        'client/app/**/*.js',
         'test/specs/**/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-      'public/app/app.js'
+      'client/app/app.js'
     ],
 
 

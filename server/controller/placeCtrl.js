@@ -10,4 +10,4 @@ exports.getPlaceById = function(req, res){
     Place.findOne({_id:req.params.id}).exec(function(err, place){
         res.send(place);
     });
-}
+};

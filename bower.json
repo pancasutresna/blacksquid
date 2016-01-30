@@ -10,19 +10,17 @@
   "homepage": "",
   "private": true,
   "dependencies": {
-    "jquery": "~2.2.0",
+    "jquery": "^2.2.0",
     "toastr": "~2.1.2",
     "angular": "~1.4.8",
     "angular-resource": "~1.4.8",
     "angular-route": "~1.4.8",
     "bootstrap": "~3.3.6",
-    "angular-mocks": "~1.4.9",
     "moment": "^2.11.1",
     "angular-sanitize": "^1.4.9",
     "angular-animate": "^1.4.9"
   },
   "devDependencies": {
-    "angular-animate": "~1.4.9",
-    "angular-sanitize": "~1.4.9"
+    "angular-mocks": "~1.4.9"
   }
 }

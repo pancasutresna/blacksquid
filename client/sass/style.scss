@@ -1,0 +1,30 @@
+body{
+
+    padding-top: 81px;
+
+    .navbar-form{
+        .form-group{
+            margin-left: 10px;
+        }
+        button{
+            margin-left: 5px;
+        }
+    }
+
+    footer{
+        padding-left: 15px;
+        padding-right: 10px;
+        p {
+            border-top: 1px solid #d7e0e2;
+        }
+    }
+
+    .toast-top-right{
+        top: 70px;
+    }
+
+    .toast-success{
+        background-color: #13987e;
+    }
+
+}

@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+    head
+        title Blacksquid
+        meta(charset="utf-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+        // bower:css
+        link(rel='stylesheet', href='/vendor/toastr/toastr.css')
+        link(rel='stylesheet', href='/vendor/bootstrap/dist/css/bootstrap.css')
+        // endbower
+
+        //- inject:css
+        link(rel="stylesheet", href="/css/style.css")
+        //- endinject
+    body(ng-app="app")
+        include currentUser
+        block main-content
+        // Include javascript files
+        include scripts

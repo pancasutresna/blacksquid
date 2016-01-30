@@ -1,0 +1,19 @@
+extends includes/layout
+
+block main-content
+    .navbar.navbar-inverse.navbar-fixed-top
+        .container
+            .navbar-header
+                a.navbar-brand(href="/") Blacksquid
+            .navbar-collapse.collapse
+                ul.nav.navbar-nav
+                    li
+                        a(href="/") Home
+                    li
+                        a(href="/places") Browse Places
+                div(ng-include="'/partials/auth/form-login'")
+    section.content
+        div(ng-view)
+
+    footer.container.text-center
+        p &copy; 2016 Blacksquid
