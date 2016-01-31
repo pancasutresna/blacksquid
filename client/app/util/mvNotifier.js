@@ -1,4 +1,6 @@
-(function(){
+/* global toastr */
+/* global angular */
+(function() {
     'use strict';
 
     angular
@@ -7,13 +9,13 @@
 
     angular
         .module('app')
-        .factory('mvNotifier', function(mvToastr){
+        .factory('mvNotifier', function(mvToastr) {
             return {
-                notify: function(msg){
+                notify: function(msg) {
                     mvToastr.success(msg);
                     console.log(msg);
                 },
-                error: function(msg){
+                error: function(msg) {
                     mvToastr.error(msg);
                     console.log(msg);
                 }

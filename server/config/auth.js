@@ -10,7 +10,7 @@ exports.authenticate = function(req, res, next) {
         if (!user) {
             res.send({
                 success: false
-            })
+            });
         }
         req.logIn(user, function(err) {
             if (err) {
@@ -24,24 +24,24 @@ exports.authenticate = function(req, res, next) {
     });
 
     auth(req, res, next);
-}
+};
 
-exports.requiresApiLogin = function(req, res, next){
-   if(!req.isAuthenticated()){
-       res.status(403);
-       res.end();
-   } else {
-       next();
-   }
-}
+exports.requiresApiLogin = function(req, res, next) {
+    if (!req.isAuthenticated()) {
+        res.status(403);
+        res.end();
+    } else {
+        next();
+    }
+};
 
-exports.requiresRole = function(role){
-    return function(req, res, next){
-        if(!req.isAuthenticated() || req.user.roles.indexOf(role) === -1){
+exports.requiresRole = function(role) {
+    return function(req, res, next) {
+        if (!req.isAuthenticated() || req.user.roles.indexOf(role) === -1) {
             res.status(403);
             res.end();
         } else {
             next();
         }
-    }
-}
+    };
+};

@@ -6,12 +6,13 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var path = require('path');
 var multer = require('multer');
-var upload = multer({ dest: './uploads' });
+var upload = multer({dest: './uploads'});
 var passport = require('passport');
 
-module.exports = function(app, config){
+module.exports = function(app, config) {
     app.set('views', config.rootPath + '/client');
     //app.set('views', config.rootPath + '/dist');
+
     app.set('view engine', 'jade');
 
     app.use(logger('dev'));
@@ -35,4 +36,4 @@ module.exports = function(app, config){
 
     app.use(express.static(path.join(config.rootPath, 'client')));
     //app.use(express.static(path.join(config.rootPath, 'dist')));
-}
+};

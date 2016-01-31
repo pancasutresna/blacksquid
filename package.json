@@ -44,6 +44,7 @@
     "gulp-jshint": "^2.0.0",
     "gulp-livereload": "^3.8.1",
     "gulp-load-plugins": "^1.2.0",
+    "gulp-nodemon": "^2.0.6",
     "gulp-plumber": "^1.0.1",
     "gulp-print": "^2.0.1",
     "gulp-run-sequence": "^0.3.2",

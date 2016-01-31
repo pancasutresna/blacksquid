@@ -1,12 +1,13 @@
+var path = require('path');
+
 module.exports = function() {
     var client = './client/';
     var clientApp = client + 'app/';
     var server = './server/';
     var dist = './dist/';
+    var temp = './tmp';
 
     var config  = {
-
-        temp: './tmp/',
         dist: dist,
         css: client + 'css/style.css',
         /*
@@ -28,6 +29,8 @@ module.exports = function() {
             '!' + clientApp + '**/*.spec.js'
         ],
         client: client,
+        server: server,
+        temp: temp,
         js: [
             clientApp + '**/*.module.js',
             clientApp + '**/*.js',
@@ -44,7 +47,14 @@ module.exports = function() {
             json: require('./bower.json'),
             directory: './client/vendor',
             ignorePath: '..'
-        }
+        },
+        /**
+         * Node settings
+         */
+        defaultPort: 3030,
+        nodeServer: './bin/www',
+        rootPath: path.normalize(__dirname + '/../../')
+        
     };
 
     config.getWiredepDefaultOptions = function() {
