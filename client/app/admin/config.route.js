@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular
@@ -6,7 +6,7 @@
         .run(configRoute);
 
     configRoute.$inject = ['routehelper'];
-    function configRoute(routehelper){
+    function configRoute(routehelper) {
         var routes = [
             {
                 url: '/admin/users',

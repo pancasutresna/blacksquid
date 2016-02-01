@@ -36,6 +36,5 @@ require('./server/config/routes')(app);
  */
 require('./server/config/errors')(app);
 
-
 module.exports = app;
 module.exports.config = config;

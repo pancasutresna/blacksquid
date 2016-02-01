@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular
@@ -9,11 +9,11 @@
      * Call routehelper on module blocks.router
      */
     appRun.$inject = ['routehelper'];
-    function appRun(routehelper){
+    function appRun(routehelper) {
         routehelper.configureRoutes(getRoutes());
     }
 
-    function getRoutes(){
+    function getRoutes() {
         return [
             {
                 url: '/places',

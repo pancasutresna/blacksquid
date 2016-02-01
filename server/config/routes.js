@@ -4,39 +4,37 @@ var placeCtrl = require('../controller/placeCtrl');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
-module.exports = function(app){
+module.exports = function(app) {
 
-    // test 
+    app.get('/api/users', auth.requiresRole('admin'), userCtrl.getUsers);
+    // test comment
+    app.post('/api/users', userCtrl.createUser);
+    app.put('/api/users', userCtrl.updateUser);
 
-     app.get('/api/users', auth.requiresRole('admin'), userCtrl.getUsers);
-     // test comment
-     app.post('/api/users', userCtrl.createUser);
-     app.put('/api/users', userCtrl.updateUser);
-
-     app.get('/api/places', placeCtrl.getPlaces);
-     app.get('/api/places/:id', placeCtrl.getPlaceById);
+    app.get('/api/places', placeCtrl.getPlaces);
+    app.get('/api/places/:id', placeCtrl.getPlaceById);
 
     // Angular partials setup
-    app.get('/partials/*', function(req, res){
+    app.get('/partials/*', function(req, res) {
         res.render('app/' + req.params[0]);
     });
 
-    app.post('/login',  auth.authenticate);
+    app.post('/login', auth.authenticate);
 
-    app.post('/logout', function(req, res){
+    app.post('/logout', function(req, res) {
         req.logout();
         res.end();
     });
 
     // handle all request to api, return 404 if requested through browsers
-    app.all('/api/*', function(req, res){
+    app.all('/api/*', function(req, res) {
         res.send(404);
     });
 
-    app.get('*', function(req, res){
+    app.get('*', function(req, res) {
         res.render('index', {
             bootstrappedUser: req.user
         });
     });
 
-}
+};

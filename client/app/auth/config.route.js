@@ -1,13 +1,12 @@
-(function(){
+(function() {
     'use strict';
 
     angular
         .module('app.auth')
         .run(routeConfig);
 
-
     routeConfig.$inject = ['routehelper'];
-    function routeConfig(routehelper){
+    function routeConfig(routehelper) {
         var routes = [
             {
                 url: '/signup',

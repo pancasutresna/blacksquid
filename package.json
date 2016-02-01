@@ -32,6 +32,8 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "bs-html-injector": "^3.0.0",
     "chai": "^3.4.1",
     "debug": "^2.2.0",
     "del": "^2.2.0",

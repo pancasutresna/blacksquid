@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular
@@ -6,7 +6,7 @@
         .run(routeConfig);
 
     routeConfig.$inject = ['routehelper'];
-    function routeConfig(routehelper){
+    function routeConfig(routehelper) {
         var routes = [
             {
                 url: '/',

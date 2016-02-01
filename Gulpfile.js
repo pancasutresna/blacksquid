@@ -4,6 +4,7 @@
  */
 var gulp = require('gulp');
 var args = require('yargs').argv;
+var browserSync = require('browser-sync');
 var config = require('./gulp.config')();
 var del = require('del');
 var runSequence = require('gulp-run-sequence');
@@ -87,7 +88,7 @@ gulp.task('serve-dev', ['inject'], function() {
     var nodeOptions = {
         script: config.nodeServer,
         delayTime: 1,
-        legacyWatch: true,
+        //legacyWatch: true,
         env: {
             'PORT': port,
             'NODE_ENV': isDev ? 'development' : 'production',
@@ -102,6 +103,7 @@ gulp.task('serve-dev', ['inject'], function() {
             })
             .on('start', function() {
                 log('### nodemon started ###');
+                startBrowserSync();
             })
             .on('crash', function() {
                 log('### nodemon crashed: script crashed for some reason ###');
@@ -109,6 +111,13 @@ gulp.task('serve-dev', ['inject'], function() {
             .on('exit', function() {
                 log('### nodemon clean exit ###');
             });
+});
+
+gulp.task('templates', function() {
+    return gulp
+            .src(config.client + '**/*.jade')
+            .pipe($.jade({pretty: true}))
+            .pipe(gulp.dest(config.temp));
 });
 
 /**
@@ -127,6 +136,34 @@ gulp.task('serve-dev', ['inject'], function() {
 //});
 
 /////////////////////////////
+
+function startBrowserSync() {
+    if (browserSync.active) {
+        return;
+    }
+
+    log('Starting browser-sync on port: ' + port);
+
+    var options = {
+        proxy: 'localhost:' + port,
+        port: 3000,
+        files: [config.client + '**/*.*'],
+        ghostMode: {
+            clicks: true,
+            location: false,
+            forms: true,
+            scroll: true
+        },
+        injectChanges: true,
+        logFileChanges: true,
+        logLevel: 'debug',
+        logPrefix: 'gulp-patterns',
+        notify: true,
+        reloadDelay: 0
+    };
+
+    browserSync(options);
+}
 
 function clean(path) {
     log($.util.colors.yellow('Cleaning: ' + path));
