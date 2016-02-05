@@ -1,11 +1,11 @@
-(function(){
+(function() {
     'use strict';
 
     angular
         .module('app.auth')
-        .controller('mvSignupCtrl', function($scope, mvAuth, logger, $location){
+        .controller('mvSignupCtrl', function($scope, mvAuth, logger, $location) {
 
-            $scope.signup = function(){
+            $scope.signup = function() {
                 var newUserData = {
                     username: $scope.email,
                     password: $scope.password,
@@ -13,12 +13,12 @@
                     lastName: $scope.lastName
                 };
 
-                mvAuth.createUser(newUserData).then(function(){
+                mvAuth.createUser(newUserData).then(function() {
                     logger.info('New user created!');
                     $location.path('/');
-                }, function(reason){
+                }, function(reason) {
                     logger.error(reason);
                 });
-            }
+            };
         });
 })();

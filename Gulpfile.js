@@ -14,6 +14,8 @@ var $ = require('gulp-load-plugins')({
     lazy: true
 });
 
+gulp.task('help', $.taskListing);
+gulp.task('default', ['help']);
 /**
  * Run source code analyzer
  */
@@ -28,6 +30,33 @@ gulp.task('vet', function() {
             verbose: true
         }))
         .pipe($.jshint.reporter('fail'));
+});
+
+/**
+ * Copy fonts into build folder 
+ */
+gulp.task('fonts', ['clean-fonts'], function() {
+    log('Copying fonts');
+
+    return gulp.src(config.fonts)
+        .pipe(gulp.dest(config.build + 'fonts'));
+});
+
+/**
+ * Copy images into build folder and perform 
+ * compression to certain optimiation level
+ */
+gulp.task('images', ['clean-images'], function() {
+    log('Copying and compressing images');
+
+    return gulp.src(config.images)
+        .pipe($.imagemin(
+                {
+                    optimizationLevel: 4
+                }
+            )
+        )
+        .pipe(gulp.dest(config.build + 'images'));    
 });
 
 /**
@@ -46,15 +75,72 @@ gulp.task('styles', ['clean-styles'], function() {
         .pipe($.autoprefixer({
             browsers: ['last 2 version', '> 5%']
         }))
-        .pipe(gulp.dest(config.client + '/css/'));
+        .pipe(gulp.dest(config.build + '/css/'));
+});
+
+gulp.task('templatecache', ['clean-code'], function() {
+    log('Creating AngularJS $templateCache');
+
+    return gulp
+        .src(config.htmltemplates)
+        .pipe($.minifyHtml({empty: true}))
+        .pipe($.angularTemplatecache(
+            config.templateCache.file,
+            config.templateCache.options
+        ))
+        .pipe(gulp.dest(config.temp));
 });
 
 /**
- * Clean compiled stylesheets
+ * Clean anythings inside build folder
+ */
+gulp.task('clean', function(done) {
+    log('Clean anythings inside build folders: ' + $.util.colors.yellow(config.build));
+
+    del(delConfig, done);
+});
+
+/**
+ * Clean automatically generated html and javascript codes
+ * inside temp and build folders
+ */
+gulp.task('clean-code', function() {
+    log('Clean automatically generated html and javascript codes');
+
+    var files = [].concat(
+        config.temp + '**/*.js',
+        config.build + '**/*.html',
+        config.build + 'js/**/*.js'
+    );
+
+    return clean(files);
+});
+
+/**
+ * Clean generated stylesheets in build/css folder
  */
 gulp.task('clean-styles', function() {
-    var files = config.client + 'css/*.css';
-    return clean(files);
+    log('Cleaning stylesheets');
+
+    return clean(config.build + 'css/**/*.*');
+});
+
+/**
+ * Clean fonts in build/fonts folder
+ */
+gulp.task('clean-fonts', function(dome) {
+    log('Cleaning fonts');
+
+    return clean(config.build + 'fonts/**/*.*', done);
+});
+
+/**
+ * Clean images in build/images folder
+ */
+gulp.task('clean-images', function(done) {
+    log('Cleaning images');
+
+    return clean(config.build + 'images/**/*.*', done);
 });
 
 /**
@@ -67,7 +153,7 @@ gulp.task('sass-watcher', function() {
 /**
  * Inject bower components and custome assets
  */
-gulp.task('inject', ['styles'], function() {
+gulp.task('inject', ['styles', 'templatecache'], function() {
     var options = config.getWiredepDefaultOptions();
     var wiredep = require('wiredep').stream;
 
@@ -81,6 +167,25 @@ gulp.task('inject', ['styles'], function() {
             ignorePath: '/client/'
         }))
         .pipe(gulp.dest(config.client));
+});
+
+gulp.task('optimize', ['inject'], function() {
+    log('Optimizing the javascript, css and html');
+
+    //var assets = $.useref.assets({searchPath: './'});
+    var templateCache = config.temp + config.templateCache.file;
+
+    return gulp
+        .src(config.jade)
+        //.src(config.temp + '**/*.html')
+        .pipe($.plumber())
+        .pipe($.inject(gulp.src(templateCache, {read: false}), {
+            starttag: '//- inject:templates:js'
+        }))
+        //.pipe(assets)
+        //.pipe(assets.restore())
+        .pipe($.useref({ searchPath: './build' }))
+        .pipe(gulp.dest(config.build));
 });
 
 gulp.task('serve-dev', ['inject'], function() {
@@ -114,10 +219,14 @@ gulp.task('serve-dev', ['inject'], function() {
 });
 
 gulp.task('templates', function() {
+    var YOUR_LOCALS = {};
     return gulp
             .src(config.client + '**/*.jade')
-            .pipe($.jade({pretty: true}))
-            .pipe(gulp.dest(config.temp));
+            .pipe($.jade({
+                locals: YOUR_LOCALS,
+                pretty: true
+            }))
+            .pipe(gulp.dest(config.client));
 });
 
 /**

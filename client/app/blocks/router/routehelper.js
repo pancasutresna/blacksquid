@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular
@@ -6,7 +6,7 @@
         .provider('routehelperConfig', routehelperConfig)
         .factory('routehelper', routehelper);
 
-    function routehelperConfig(){
+    function routehelperConfig() {
         this.config = {
             // These are the properties we need to set
             // $routeProvider: undefined
@@ -14,7 +14,7 @@
             // resolveAlways: {ready: function(){ } }
         };
 
-        this.$get = function(){
+        this.$get = function() {
             return {
                 config: this.config
             };
@@ -22,8 +22,7 @@
     }
 
     routehelper.$inject = ['$location', '$rootScope', '$route', 'logger', 'routehelperConfig', 'mvAuth'];
-
-    function routehelper($location, $rootScope, $route, logger, routehelperConfig, mvAuth){
+    function routehelper($location, $rootScope, $route, logger, routehelperConfig, mvAuth) {
         var handlingRouteChangeError = false;
         var routeCounts = {
             errors: 0,
@@ -34,17 +33,16 @@
 
         var routeRoleChecks = {
             admin: {
-                auth: function(mvAuth){
+                auth: function(mvAuth) {
                     return mvAuth.authorizeCurrentUserForRoute('admin');
                 }
             },
             user: {
-                auth: function(mvAuth){
+                auth: function(mvAuth) {
                     return mvAuth.authorizeAuthenticatedUserForRoute();
                 }
             }
-        }
-
+        };
 
         /**
          * Define expossed services
@@ -69,7 +67,8 @@
         function configureRoutes(routes) {
             routes.forEach(function(route) {
                 route.config.resolve =
-                    angular.extend(route.config.resolve || {}, routehelperConfig.config.resolveAlways);
+                    angular.extend(route.config.resolve || {},
+                        routehelperConfig.config.resolveAlways);
                 $routeProvider.when(route.url, route.config);
             });
             $routeProvider.otherwise({redirectTo: '/'});
@@ -86,8 +85,8 @@
                     }
                     routeCounts.errors++;
                     handlingRouteChangeError = true;
-                    var destination = (current && (current.title || current.name || current.loadedTemplateUrl)) ||
-                        'unknown target';
+                    var destination = (current &&
+                        (current.title || current.name || current.loadedTemplateUrl)) || 'unknown target';
                     var msg = 'Error routing to ' + destination + '. ' + (rejection.msg || '');
                     logger.warning(msg, [current]);
                     $location.path('/');
@@ -123,7 +122,5 @@
                 }
             );
         }
-
-
     }
 })();

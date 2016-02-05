@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular
@@ -6,7 +6,7 @@
         /*
          * Angular modules
          */
-        'ngAnimate', 'ngRoute', 'ngSanitize', 'ngResource',
+        'ngAnimate', 'ngRoute', 'ngSanitize', 'ngResource', 'ngCookies',
         /*
          * Reusable cross app code modules
          */

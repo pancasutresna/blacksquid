@@ -18,14 +18,16 @@
             {
                 url: '/places',
                 config: {
-                    templateUrl: '/partials/place/place-list',
+                    // templateUrl: '/partials/place/place-list',
+                    templateUrl: '/app/place/place-list.html',
                     controller: 'mvPlaceListCtrl'
                 }
             },
             {
                 url: '/places/:id',
                 config: {
-                    templateUrl: '/partials/place/place-detail',
+                    // templateUrl: '/partials/place/place-detail',
+                    templateUrl: '/app/place/place-detail.html',
                     controller: 'mvPlaceDetailCtrl'
                 }
             }

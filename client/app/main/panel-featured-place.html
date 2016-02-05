@@ -1,0 +1,9 @@
+
+<div class="panel panel-primary">
+  <div class="panel-heading text-center">Featured places</div>
+  <div class="panel-body"> 
+    <div ng-repeat="place in places | filter:{featured:true}" class="row">
+      <div class="col-md-12"><a href="/places/{{ place._id }}">{{ place.title }}</a></div>
+    </div>
+  </div>
+</div>

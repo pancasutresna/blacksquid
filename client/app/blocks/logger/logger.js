@@ -1,11 +1,11 @@
-(function(){
+(function() {
     'use strict';
 
     angular
         .module('blocks.logger')
         .factory('logger', ['$log', 'toastr', logger]);
 
-    function logger($log, toastr){
+    function logger($log, toastr) {
         /*
          * define expossed services
          */
@@ -28,22 +28,22 @@
          * Implementation details
          */
 
-        function error(message, data, title){
+        function error(message, data, title) {
             toastr.error(message, title);
             $log.error('Error: ' + message, data);
         }
 
-        function info(message, data, title){
+        function info(message, data, title) {
             toastr.info(message, title);
             $log.info('Info: ' + message, data);
         }
 
-        function success(message, data, title){
+        function success(message, data, title) {
             toastr.success(message, title);
             $log.success('Success: ' + message, data);
         }
 
-        function warning(message, data, title){
+        function warning(message, data, title) {
             toastr.warning(message, title);
             $log.warn('Warning: ' + message, data);
         }

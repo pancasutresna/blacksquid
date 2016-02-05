@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     var core = angular.module('app.core');
@@ -6,7 +6,7 @@
     core.config(toastrConfig);
 
     toastrConfig.$inject = ['toastr'];
-    function toastrConfig(toastr){
+    function toastrConfig(toastr) {
         toastr.options.timeOut = 4000;
         toastr.options.positionClass = 'toast-bottom-right';
     }
@@ -31,10 +31,12 @@
     /*
      * routehelperConfigProvider -> routehelperConfig + suffix (Provider) as well as exceptionHandlerProvider
      */
-    configure.$inject = ['$logProvider', '$routeProvider', '$locationProvider', 'routehelperConfigProvider', 'exceptionHandlerProvider'];
-    function configure($logProvider, $routeProvider, $locationProvider, routehelperConfigProvider, exceptionHandlerProvider){
+    configure.$inject = ['$logProvider', '$routeProvider', '$locationProvider',
+                         'routehelperConfigProvider', 'exceptionHandlerProvider'];
+    function configure($logProvider, $routeProvider, $locationProvider,
+                        routehelperConfigProvider, exceptionHandlerProvider) {
 
-        if($logProvider.debugEnabled){
+        if ($logProvider.debugEnabled) {
             $logProvider.debugEnabled(true);
         }
 

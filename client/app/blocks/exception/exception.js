@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular
@@ -6,7 +6,7 @@
         .factory('exception', exception);
 
     exception.$inject = ['logger'];
-    function exception(logger){
+    function exception(logger) {
         /*
          * Define expossed services
          */
@@ -20,10 +20,10 @@
         /*
          * Service implementation details
          */
-        function catcher(message){
-            return function(reason){
+        function catcher(message) {
+            return function(reason) {
                 logger.error(message, reason);
-            }
+            };
         }
     }
 })();

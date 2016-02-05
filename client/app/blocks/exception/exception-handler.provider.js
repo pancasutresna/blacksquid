@@ -1,4 +1,4 @@
-(function(){
+(function() {
     'use strict';
 
     angular
@@ -10,20 +10,22 @@
      * Must configure the exception handling
      * @return {[type]}
      */
-    function exceptionHandlerProvider(){
-        this.config = {
-          appErrorPrefix: undefined
+    function exceptionHandlerProvider() {
+        var exceptionHandler = this;
+
+        exceptionHandler.config = {
+            appErrorPrefix: undefined
         };
 
-        this.configure = function(appErrorPrefix){
+        exceptionHandler.configure = function(appErrorPrefix) {
             this.config.appErrorPrefix = appErrorPrefix;
         };
 
-        this.$get = function(){
+        exceptionHandler.$get = function() {
             return {
                 config: this.config
             };
-        }
+        };
     }
 
     /**
@@ -34,7 +36,7 @@
      * @ngInject
      */
     config.$inject = ['$provide'];
-    function config($provide){
+    function config($provide) {
         // extend default exceptionHandler
         $provide.decorator('$exceptionHandler', extendExceptionHandler);
     }
@@ -46,8 +48,8 @@
      * @param  {Object} logger
      * @return {Function} the decorated $exceptionHandler service
      */
-    function extendExceptionHandler($delegate, exceptionHandler, logger){
-        return function(exception, cause){
+    function extendExceptionHandler($delegate, exceptionHandler, logger) {
+        return function(exception, cause) {
             var appErrorPrefix = exceptionHandler.config.appErrorPrefix || '';
             var errorData = {
                 exception: exception,
@@ -70,4 +72,5 @@
             logger.error(exception.message, errorData);
         };
     }
+
 })();

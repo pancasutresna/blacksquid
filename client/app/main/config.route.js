@@ -11,7 +11,8 @@
             {
                 url: '/',
                 config: {
-                    templateUrl:'/partials/main/content-main',
+                    // templateUrl:'/partials/main/content-main',
+                    templateUrl:'/app/main/content-main.html',
                     controller: 'mvMainCtrl'
                 }
             }

@@ -3,8 +3,9 @@ var userCtrl = require('../controller/userCtrl');
 var placeCtrl = require('../controller/placeCtrl');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var path = require('path');
 
-module.exports = function(app) {
+module.exports = function(app, config) {
 
     app.get('/api/users', auth.requiresRole('admin'), userCtrl.getUsers);
     // test comment
@@ -13,11 +14,6 @@ module.exports = function(app) {
 
     app.get('/api/places', placeCtrl.getPlaces);
     app.get('/api/places/:id', placeCtrl.getPlaceById);
-
-    // Angular partials setup
-    app.get('/partials/*', function(req, res) {
-        res.render('app/' + req.params[0]);
-    });
 
     app.post('/login', auth.authenticate);
 
@@ -32,9 +28,7 @@ module.exports = function(app) {
     });
 
     app.get('*', function(req, res) {
-        res.render('index', {
-            bootstrappedUser: req.user
-        });
+        res.sendFile(path.join(config.rootPath, 'client/index.html'));
     });
 
 };

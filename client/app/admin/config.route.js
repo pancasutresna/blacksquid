@@ -11,7 +11,8 @@
             {
                 url: '/admin/users',
                 config: {
-                    templateUrl: '/partials/admin/user-list',
+                    // templateUrl: '/partials/admin/user-list',
+                    templateUrl: '/app/admin/user-list.html',
                     controller: 'mvAdminUserListCtrl',
                     resolve: routehelper.routeRoleChecks.admin
                 }

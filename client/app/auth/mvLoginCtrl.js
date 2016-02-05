@@ -1,9 +1,9 @@
-(function(){
+(function() {
     'use strict';
 
     angular
         .module('app.auth')
-        .controller('mvLoginCtrl', function($scope, $http, mvIdentity, logger, mvAuth, $location) {
+        .controller('mvLoginCtrl', function($scope, $http, $cookieStore, mvIdentity, logger, mvAuth, $location) {
             $scope.identity = mvIdentity;
             $scope.signin = function(username, password) {
                 mvAuth.authenticateUser(username, password).then(function(success) {
@@ -17,6 +17,10 @@
 
             $scope.signout = function() {
                 mvAuth.logoutUser().then(function() {
+                    /*
+                     * Remove stored cookies
+                     */
+                    $cookieStore.remove('bootstrappedUser');
                     $scope.username = '';
                     $scope.password = '';
                     logger.info('You have successfully signed out!');

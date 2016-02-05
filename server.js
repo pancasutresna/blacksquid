@@ -3,6 +3,7 @@ var express = require('express');
 // Define environment variables
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var app = express();
+var path = require('path');
 
 var config = require('./server/config/config')[env];
 
@@ -28,7 +29,7 @@ require('./server/config/passport.js')();
  * Call routes configuration
  * @app
  */
-require('./server/config/routes')(app);
+require('./server/config/routes')(app, config);
 
 /**
  * Call error handler

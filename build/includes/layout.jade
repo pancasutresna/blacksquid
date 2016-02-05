@@ -4,17 +4,24 @@ html(lang="en")
         title Blacksquid
         meta(charset="utf-8")
         meta(name="viewport", content="width=device-width, initial-scale=1")
-        // bower:css
+        //- build:css styles/lib.css
+        //- bower:css
         link(rel='stylesheet', href='/vendor/toastr/toastr.css')
         link(rel='stylesheet', href='/vendor/bootstrap/dist/css/bootstrap.css')
-        // endbower
+        //- endbower
+        //- endbuild
 
+        //- build:css styles/app.css
         //- inject:css
         link(rel="stylesheet", href="/css/style.css")
         //- endinject
-
+        //- endbuild
     body(ng-app="app")
+        //- included current users
         include currentUser
+
+        //- place for main content
         block main-content
-        // Include javascript files
-        include scripts
+        
+        //- included scripts
+        include script

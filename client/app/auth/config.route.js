@@ -11,14 +11,16 @@
             {
                 url: '/signup',
                 config: {
-                    templateUrl:'/partials/auth/form-signup',
+                    // templateUrl:'/partials/auth/form-signup',
+                    templateUrl:'/app/auth/form-signup.html',
                     controller: 'mvSignupCtrl'
                 }
             },
             {
                 url: '/profile',
                 config: {
-                    templateUrl: '/partials/auth/form-profile',
+                    // templateUrl: '/partials/auth/form-profile',
+                    templateUrl: '/app/auth/form-profile.html',
                     controller: 'mvProfileCtrl',
                     resolve: routehelper.routeRoleChecks.user
                 }

@@ -1,11 +1,11 @@
-(function(){
+(function() {
     'use strict';
 
     angular
         .module('app.place')
-        .factory('mvPlace', function($resource){
+        .factory('mvPlace', function($resource) {
             // _id is used in the mvPlaceDetailCtrl
-            var placeResource = $resource('/api/places/:_id', {_id: "@id"}, {
+            var placeResource = $resource('/api/places/:_id', {_id: '@id'}, {
                 update: {method: 'PUT', isArray: false}
             });
 

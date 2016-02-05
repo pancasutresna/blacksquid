@@ -3,14 +3,14 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var User = mongoose.model('User');
 
-module.exports = function(){
+module.exports = function() {
 
     // Passport definition
     passport.use(new LocalStrategy(
-        function(username, password, done){
+        function(username, password, done) {
             console.log('username is :' + username);
-            User.findOne({username: username}).exec(function(err, user){
-                if(user && user.authenticate(password)){
+            User.findOne({username: username}).exec(function(err, user) {
+                if (user && user.authenticate(password)) {
                     console.log('find a user');
                     return done(null, user);
                 } else {
@@ -22,20 +22,20 @@ module.exports = function(){
     ));
 
     // Serialize method
-    passport.serializeUser(function(user, done){
-        if(user){
+    passport.serializeUser(function(user, done) {
+        if (user) {
             done(null, user._id);
         }
     });
 
     // Deserialize method
-    passport.deserializeUser(function(id, done){
-        User.findOne({_id:id}).exec(function(err, user){
-            if(user){
+    passport.deserializeUser(function(id, done) {
+        User.findOne({_id:id}).exec(function(err, user) {
+            if (user) {
                 return done(null, user);
             } else {
                 return done(null, false);
             }
-        })
+        });
     });
-}
+};

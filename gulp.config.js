@@ -5,7 +5,7 @@ module.exports = function() {
     var clientApp = client + 'app/';
     var server = './server/';
     var dist = './dist/';
-    var temp = './tmp';
+    var temp = './tmp/';
 
     var config  = {
         dist: dist,
@@ -28,9 +28,13 @@ module.exports = function() {
             '!' + client + 'css/*.css',
             '!' + clientApp + '**/*.spec.js'
         ],
+        build: './build/',
         client: client,
         server: server,
         temp: temp,
+        fonts: client + 'vendor/font-awesome/fonts/**/*.*',
+        htmltemplates: clientApp + '**/*.html',
+        images: client + 'images/**/*.*',
         js: [
             clientApp + '**/*.module.js',
             clientApp + '**/*.js',
@@ -41,11 +45,22 @@ module.exports = function() {
             client + '**/*.jade'
         ],
         /**
+         * template cahce
+         */
+        templateCache: {
+            file: 'templates.js',
+            options: {
+                module: 'app.core',
+                standAlone: false,
+                root: 'app/'
+            }
+        },
+        /**
          * Bower and NPM location
          */
         bower: {
             json: require('./bower.json'),
-            directory: './client/vendor',
+            directory: './client/vendor/',
             ignorePath: '..'
         },
         /**
@@ -54,7 +69,6 @@ module.exports = function() {
         defaultPort: 3030,
         nodeServer: './bin/www',
         rootPath: path.normalize(__dirname + '/../../')
-        
     };
 
     config.getWiredepDefaultOptions = function() {

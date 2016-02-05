@@ -1,0 +1,7 @@
+.panel.panel-primary
+    .panel-heading.text-center New places
+    .panel-body
+        .row(ng-repeat="place in places | filter:{order_by:published} | limitTo:10")
+            .col-md-3 {{place.published | date:'MMM d'}}
+            .col-md-9 
+                a(href="/places/{{ place._id }}") {{ place.title }}

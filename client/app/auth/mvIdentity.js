@@ -1,23 +1,26 @@
-(function(){
+(function() {
     'use strict';
 
     angular
         .module('app.auth')
-        .factory('mvIdentity', function($window, mvUser){
+        .factory('mvIdentity', function($window, $cookieStore, mvUser) {
 
             var currentUser;
-            if(!!$window.bootstrappedUserObject){
+            /**
+             * get currentUser object from $cookieStore
+             */
+            if (!!$cookieStore.get('bootstrappedUser')) {
                 currentUser = new mvUser();
-                angular.extend(currentUser, $window.bootstrappedUserObject);
+                angular.extend(currentUser, $cookieStore.get('bootstrappedUser'));
             }
 
             return {
                 currentUser: currentUser,
-                isAuthenticated: function(){
+                isAuthenticated: function() {
                     return !!this.currentUser;
                 },
-                isAuthorized: function(role){
-                    return !!this.currentUser && this.currentUser.roles.indexOf(role) > -1
+                isAuthorized: function(role) {
+                    return !!this.currentUser && this.currentUser.roles.indexOf(role) > -1;
                 }
             };
         });

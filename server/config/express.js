@@ -11,7 +11,10 @@ var passport = require('passport');
 var http = require('http');
 
 module.exports = function(app, config) {
-    app.set('views', config.rootPath + '/client');
+
+    app.use(express.static(path.join(config.rootPath, 'client')));
+
+    app.set('views', config.rootPath + 'client');
     app.set('view engine', 'jade');
     app.use(logger('dev'));
     app.use(cookieParser());
@@ -33,5 +36,5 @@ module.exports = function(app, config) {
     })
     );
 
-    app.use(express.static(path.join(config.rootPath, 'client')));
+    
 };
