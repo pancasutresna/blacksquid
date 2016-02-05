@@ -11,7 +11,9 @@ module.exports = {
     },
     production: {
         db: 'mongodb://panca_sutresna:blacksquid1029#*@ds045795.mongolab.com:45795/blacksquid',
+        // db: 'mongodb://localhost/blacksquid',
         port: process.env.PORT || 80,
+        // port: process.env.PORT || 3030,
         rootPath: rootPath,
         environment: 'production'
     }

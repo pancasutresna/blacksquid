@@ -12,43 +12,28 @@ var http = require('http');
 
 module.exports = function(app, config) {
     var oneDay = 86400000;
-    /*
-     *  DEV Mode
-     *  //TODO: Create swither between dev and production mode
-     */
+
     switch (config.environment) {
-    case 'development':
-        console.log('** PRODUCTION **');
+    case 'production':
+        console.log('** SERVING PRODUCTION BUILD **');
         app.use('/', express.static(path.join(config.rootPath, 'build')));
         break;
     default:
-        console.log('** DEVELOPMENT **');
+        console.log('** SERVING DEVELOPMENT BUILD **');
         app.use('/', express.static(path.join(config.rootPath, 'client'), {maxAge: oneDay}));
         app.use('/', express.static('./'));
         break;
     }
 
-    app.set('views', config.rootPath + 'client');
-    app.set('view engine', 'jade');
     app.use(logger('dev'));
     app.use(cookieParser());
     app.use(bodyParser.json());
     app.use(session({
-        secret: 'take over the world',
+        secret: 'to take over the world',
         resave: true,
         saveUninitialized: true
     }));
 
     app.use(passport.initialize());
     app.use(passport.session());
-    // app.use(sassMiddleware({
-    //     src: path.join(config.rootPath, '/client/sass'),
-    //     dest: path.join(config.rootPath, '/client/css'),
-    //     outputStyle: 'compressed',
-    //     prefix: '/css',
-    //     debug: true
-    // })
-    // );
-
-    
 };
