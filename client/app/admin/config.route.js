@@ -3,10 +3,10 @@
 
     angular
         .module('app.admin')
-        .run(configRoute);
+        .run(routeConfig);
 
-    configRoute.$inject = ['routehelper'];
-    function configRoute(routehelper) {
+    routeConfig.$inject = ['routehelper'];
+    function routeConfig(routehelper) {
         var routes = [
             {
                 url: '/admin/users',

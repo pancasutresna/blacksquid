@@ -27,8 +27,22 @@ module.exports = function(app, config) {
         res.send(404);
     });
 
+    app.get('/admin/*', function(req, res) {
+        res.sendFile(path.join(config.rootPath, 'build/index.html'));
+    });
+
     app.get('*', function(req, res) {
-        res.sendFile(path.join(config.rootPath, 'client/index.html'));
+        console.log('PATH : ' + path.join(config.rootPath, 'build/index.html'));
+        //switch (config.environment) {
+       // case 'development':
+              res.sendFile(path.join(config.rootPath, 'build/index.html'));
+              
+        //    break;
+        //default:
+            //res.sendFile(path.join(config.rootPath, 'client/index.html'));
+        //    break;
+        //}
+        
     });
 
 };

@@ -75,7 +75,7 @@ gulp.task('styles', ['clean-styles'], function() {
         .pipe($.autoprefixer({
             browsers: ['last 2 version', '> 5%']
         }))
-        .pipe(gulp.dest(config.build + '/css/'));
+        .pipe(gulp.dest(config.temp + '/css/'));
 });
 
 gulp.task('templatecache', ['clean-code'], function() {
@@ -95,8 +95,8 @@ gulp.task('templatecache', ['clean-code'], function() {
  * Clean anythings inside build folder
  */
 gulp.task('clean', function(done) {
+    var delConfig = [].concat(config.build, config.temp);
     log('Clean anythings inside build folders: ' + $.util.colors.yellow(config.build));
-
     del(delConfig, done);
 });
 
@@ -122,16 +122,16 @@ gulp.task('clean-code', function() {
 gulp.task('clean-styles', function() {
     log('Cleaning stylesheets');
 
-    return clean(config.build + 'css/**/*.*');
+    return clean(config.temp + 'css/**/*.*');
 });
 
 /**
  * Clean fonts in build/fonts folder
  */
-gulp.task('clean-fonts', function(dome) {
+gulp.task('clean-fonts', function() {
     log('Cleaning fonts');
 
-    return clean(config.build + 'fonts/**/*.*', done);
+    return clean(config.build + 'fonts/**/*.*');
 });
 
 /**
@@ -158,14 +158,10 @@ gulp.task('inject', ['styles', 'templatecache'], function() {
     var wiredep = require('wiredep').stream;
 
     return gulp
-        .src(config.jade)
+        .src(config.index)
         .pipe(wiredep(options))
-        .pipe($.inject(gulp.src(config.js), {
-            ignorePath: '/client/'
-        }))
-        .pipe($.inject(gulp.src(config.css), {
-            ignorePath: '/client/'
-        }))
+        .pipe($.inject(gulp.src(config.js)))
+        .pipe($.inject(gulp.src(config.css)))
         .pipe(gulp.dest(config.client));
 });
 
@@ -176,15 +172,15 @@ gulp.task('optimize', ['inject'], function() {
     var templateCache = config.temp + config.templateCache.file;
 
     return gulp
-        .src(config.jade)
-        //.src(config.temp + '**/*.html')
+        .src(config.index)
         .pipe($.plumber())
         .pipe($.inject(gulp.src(templateCache, {read: false}), {
-            starttag: '//- inject:templates:js'
+            starttag: '<!-- inject:templates:js -->'
         }))
-        //.pipe(assets)
-        //.pipe(assets.restore())
-        .pipe($.useref({ searchPath: './build' }))
+        .pipe($.useref(
+            { 
+                searchPath: './'
+            }))
         .pipe(gulp.dest(config.build));
 });
 

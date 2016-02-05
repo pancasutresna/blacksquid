@@ -32,7 +32,8 @@ module.exports = function() {
         client: client,
         server: server,
         temp: temp,
-        fonts: client + 'vendor/font-awesome/fonts/**/*.*',
+        index: client + 'index.html',
+        fonts: './bower_components/font-awesome/fonts/**/*.*',
         htmltemplates: clientApp + '**/*.html',
         images: client + 'images/**/*.*',
         js: [
@@ -52,7 +53,7 @@ module.exports = function() {
             options: {
                 module: 'app.core',
                 standAlone: false,
-                root: 'app/'
+                root: '/app'
             }
         },
         /**
@@ -60,7 +61,7 @@ module.exports = function() {
          */
         bower: {
             json: require('./bower.json'),
-            directory: './client/vendor/',
+            directory: './bower_components',
             ignorePath: '..'
         },
         /**

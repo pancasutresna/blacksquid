@@ -1,6 +1,0 @@
-.panel.panel-primary
-    .panel-heading.text-center Featured places
-    .panel-body 
-        .row(ng-repeat="place in places | filter:{featured:true}")
-            .col-md-12
-                a(href="/places/{{ place._id }}") {{ place.title }}

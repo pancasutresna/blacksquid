@@ -3,11 +3,11 @@
 
     angular.module('app', [
         'app.core',
+        'app.admin',
         'app.main',
         'app.place',
         'app.auth',
-        'app.user',
-        'app.admin'
+        'app.user'
     ]);
 
     /**
