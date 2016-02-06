@@ -8,7 +8,6 @@ module.exports = function() {
     var temp = './tmp/';
 
     var config  = {
-        dist: dist,
         css: client + 'css/style.css',
         /*
          * File paths

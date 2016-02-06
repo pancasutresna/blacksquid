@@ -1,6 +1,8 @@
 /**
  * Gulp configuration file
+ * Author: panca@sutresna.com
  */
+
 var del         = require('del');
 var gulp        = require('gulp');
 var args        = require('yargs').argv;
@@ -114,6 +116,9 @@ gulp.task('templatecache', ['clean-code'], function() {
  * bower components and custom script and css to 'index.html' file
  * =========================================================================== */
 gulp.task('inject', ['styles', 'templatecache'], function() {
+    log($.util.colors.yellow('### TASK INJECT ###'));
+    log($.util.colors.yellow('Injecting bower_components, custom scripts and css into index.html....'));
+
     var options = config.getWiredepDefaultOptions();
     var wiredep = require('wiredep').stream;
 
@@ -125,31 +130,38 @@ gulp.task('inject', ['styles', 'templatecache'], function() {
         .pipe(gulp.dest(config.client));
 });
 
+/* ===========================================================================
+ * This task perform optimize build for production ready code, including
+ * injection to all needed assets (javascript, css and template cache) created
+ * during the build.
+ * =========================================================================== */
 gulp.task('optimize', ['inject'], function() {
-    log('Optimizing the javascript, css and html');
+    log($.util.colors.yellow('### TASK OPTIMIZE ###'));
+    log($.util.colors.yellow('Optimizing assets and injecting templateCache....'));
 
-    //var assets = $.useref.assets({searchPath: './'});
     var templateCache = config.temp + config.templateCache.file;
 
     return gulp
         .src(config.index)
         .pipe($.plumber())
         .pipe($.inject(gulp.src(templateCache, {read: false}), {
-            starttag: '<!-- inject:templates:js -->'
+            starttag: '<!-- inject:templates:js -->'    // injecting templateCache into index.html
         }))
-        .pipe($.useref(
-            { 
-                searchPath: './'
-            }))
+        .pipe($.useref({ searchPath: './' })) // look for the assets in this path
         .pipe(gulp.dest(config.build));
 });
 
+/* ===========================================================================
+ * This task will start server and serve development build
+ * =========================================================================== */
 gulp.task('serve-dev', ['inject'], function() {
-    var isDev = true;
+    log($.util.colors.yellow('### SERV DEVELOPMENT BUILD ###'));
+    log($.util.colors.yellow('Serving development build....'));
+
+    var isDev = true; // TODO: Remove hard coded value
     var nodeOptions = {
         script: config.nodeServer,
         delayTime: 1,
-        //legacyWatch: true,
         env: {
             'PORT': port,
             'NODE_ENV': isDev ? 'development' : 'production',
@@ -157,34 +169,26 @@ gulp.task('serve-dev', ['inject'], function() {
         watch: [config.server]
     };
 
+    // watch nodemon states and perform necessary action 
     return $.nodemon(nodeOptions)
-            .on('restart', ['inspect'], function(ev) {
-                log('### nodemon restarted ###');
-                log('files changed on restart: \n' + ev);
-            })
-            .on('start', function() {
-                log('### nodemon started ###');
-                startBrowserSync();
-            })
-            .on('crash', function() {
-                log('### nodemon crashed: script crashed for some reason ###');
-            })
-            .on('exit', function() {
-                log('### nodemon clean exit ###');
-            });
-});
+        .on('restart', function(ev) {
+            log($.util.colors.yellow('### NODEMON RESTARTED ###'));
+            log($.util.colors.yellow('Files changed on restart: \n' + ev));
+        })
+        .on('start', function() {
+            log($.util.colors.green('### NODEMON STARTED ###'));
+            log($.util.colors.green('Starting browserSync....'));
 
-gulp.task('templates', function() {
-    var YOUR_LOCALS = {};
-    return gulp
-            .src(config.client + '**/*.jade')
-            .pipe($.jade({
-                locals: YOUR_LOCALS,
-                pretty: true
-            }))
-            .pipe(gulp.dest(config.client));
+            //startBrowserSync();
+        })
+        .on('crash', function() {
+            log($.util.colors.red('### NODEMON CRASHED ###'));
+            log($.util.colors.red('Script crashed for some reason....'));
+        })
+        .on('exit', function() {
+            log($.util.colors.green('### NODEMON EXITING ###'));
+        });
 });
-
 
 /* ###########################################################################
  * CLEAN SECTION
@@ -279,7 +283,6 @@ gulp.task('watch-scss', function() {
     gulp.watch([config.sass], ['styles']);
 });
 
-
 /**
  * Copy client related files into dist directory for production
  */
@@ -295,17 +298,23 @@ gulp.task('watch-scss', function() {
 //    return clean(files);
 //});
 
-/////////////////////////////
+///////////////////////////////////////////////////////////
 
+/**
+ * Start browserSync
+ * @return void
+ */
 function startBrowserSync() {
+
+    var host = 'localhost';
+
+    // check if it's already activated
     if (browserSync.active) {
         return;
     }
 
-    log('Starting browser-sync on port: ' + port);
-
     var options = {
-        proxy: 'localhost:' + port,
+        proxy: host + port,
         port: 3000,
         files: [config.client + '**/*.*'],
         ghostMode: {
@@ -322,14 +331,26 @@ function startBrowserSync() {
         reloadDelay: 0
     };
 
+    log($.util.colors.yellow('Starting browser-sync on port: ' + port));
+
     browserSync(options);
 }
 
+/**
+ * Delete path specified in the parameter
+ * @param  path :path to clean
+ * @return void
+ */
 function clean(path) {
     log($.util.colors.yellow('Cleaning: ' + path));
     del(path);
 }
 
+/**
+ * Log helper function
+ * @param String msg :messages to log
+ * @return void
+ */
 function log(msg) {
     if (typeof(msg) === 'object') {
         for (var item in msg) {
