@@ -2,29 +2,24 @@
     'use strict';
 
     angular
-        .module('blocks.exception')
-        .factory(
-            'exception', 
-            ['logger',
-            function(logger) {
-                /*
-                 * Define expossed services
-                 */
-                var service = {
-                    catcher: catcher
-                };
+    .module('blocks.exception')
+    .factory('exception', exception);
 
-                return service;
+    exception.$inject = ['logger'];
+    function exception(logger) {
+        var service = {
+            catcher: catcher
+        };
 
-                //////////////////////////////////
-                /*
-                 * Service implementation details
-                 */
-                function catcher(message) {
-                    return function(reason) {
-                        logger.error(message, reason);
-                    };
-                }
-            }]
-        );
+        return service;
+
+        //////////////////////////////////
+
+        function catcher(message) {
+            return function(reason) {
+                logger.error(message, reason);
+            };
+        }
+    }
+
 })();

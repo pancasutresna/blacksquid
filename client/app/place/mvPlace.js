@@ -2,17 +2,17 @@
     'use strict';
 
     angular
-        .module('app.place')
-        .factory(
-            'mvPlace',
-            ['$resource',
-            function($resource) {
-                // _id is used in the mvPlaceDetailCtrl
-                var placeResource = $resource('/api/places/:_id', {_id: '@id'}, {
-                    update: {method: 'PUT', isArray: false}
-                });
+    .module('app.place')
+    .factory('mvPlace', mvPlace);
 
-                return placeResource;
-            }]
-        );
+    mvPlace.$inject = ['$resource'];
+    function mvPlace($resource) {
+        // _id is used in the mvPlaceDetailCtrl
+        var placeResource = $resource('/api/places/:_id', {_id: '@id'}, {
+            update: {method: 'PUT', isArray: false}
+        });
+
+        return placeResource;
+    }
+
 })();

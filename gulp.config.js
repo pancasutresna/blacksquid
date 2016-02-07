@@ -45,6 +45,10 @@ module.exports = function() {
         jade: [
             client + '**/*.jade'
         ],
+        optimized: {
+            app: 'app.js',
+            lib: 'lib.js'
+        },
         /**
          * Browser sync
          */

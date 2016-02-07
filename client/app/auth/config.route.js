@@ -2,29 +2,29 @@
     'use strict';
 
     angular
-        .module('app.auth')
-        .run(
-            ['routehelper',
-            function(routehelper) {
-                var routes = [
-                    {
-                        url: '/signup',
-                        config: {
-                            templateUrl:'/app/auth/form-signup.html',
-                            controller: 'mvSignupCtrl'
-                        }
-                    }, {
-                        url: '/profile',
-                        config: {
-                            templateUrl: '/app/auth/form-profile.html',
-                            controller: 'mvProfileCtrl',
-                            resolve: routehelper.routeRoleChecks.user
-                        }
-                    }
-                ];
+    .module('app.auth')
+    .run(routeConfig);
 
-                routehelper.configureRoutes(routes);
-            }]
-        );
+    routeConfig.$inject = ['routehelper'];
+    function routeConfig(routehelper) {
+        var routes = [
+            {
+                url: '/signup',
+                config: {
+                    templateUrl:'/app/auth/form-signup.html',
+                    controller: 'mvSignupCtrl'
+                }
+            }, {
+                url: '/profile',
+                config: {
+                    templateUrl: '/app/auth/form-profile.html',
+                    controller: 'mvProfileCtrl',
+                    resolve: routehelper.routeRoleChecks.user
+                }
+            }
+        ];
+
+        routehelper.configureRoutes(routes);
+    }
 
 })();

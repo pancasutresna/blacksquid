@@ -2,22 +2,22 @@
     'use strict';
 
     angular
-        .module('app.place')
-        .factory(
-            'mvCachedPlace',
-            ['mvPlace',
-            function(mvPlace) {
-                var placeList;
+    .module('app.place')
+    .factory('mvCachedPlace', mvCachedPlace);
 
-                return {
-                    query: function() {
-                        if (!placeList) {
-                            placeList = mvPlace.query();
-                        }
+    mvCachedPlace.$inject = ['mvPlace'];
+    function mvCachedPlace(mvPlace) {
+        var placeList;
 
-                        return placeList;
-                    }
-                };
-            }]
-        );
+        return {
+            query: function() {
+                if (!placeList) {
+                    placeList = mvPlace.query();
+                }
+
+                return placeList;
+            }
+        };
+    }
+
 })();

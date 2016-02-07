@@ -2,51 +2,47 @@
     'use strict';
 
     angular
-        .module('blocks.logger')
-        .factory(
-            'logger',
-            ['$log', 'toastr',
-            function($log, toastr) {
+    .module('blocks.logger')
+    .factory('logger', logger);
 
-                var service = {
-                    showToasts: true,
+    logger.$inject = ['$log', 'toastr'];
+    function logger($log, toastr) {
 
-                    error: error,
-                    info: info,
-                    success: success,
-                    warning: warning,
+        var service = {
+            showToasts: true,
 
-                    // straight to console; bypass toastr
-                    log: $log.log
-                };
+            error: error,
+            info: info,
+            success: success,
+            warning: warning,
 
-                return service;
+            // straight to console; bypass toastr
+            log: $log.log
+        };
 
-                ///////////////////////////////////////////
-                /*
-                 * Implementation details
-                 */
+        return service;
 
-                function error(message, data, title) {
-                    toastr.error(message, title);
-                    $log.error('Error: ' + message, data);
-                }
+        //////////////////////////////////////////////
 
-                function info(message, data, title) {
-                    toastr.info(message, title);
-                    $log.info('Info: ' + message, data);
-                }
+        function error(message, data, title) {
+            toastr.error(message, title);
+            $log.error('Error: ' + message, data);
+        }
 
-                function success(message, data, title) {
-                    toastr.success(message, title);
-                    $log.success('Success: ' + message, data);
-                }
+        function info(message, data, title) {
+            toastr.info(message, title);
+            $log.info('Info: ' + message, data);
+        }
 
-                function warning(message, data, title) {
-                    toastr.warning(message, title);
-                    $log.warn('Warning: ' + message, data);
-                }
-            }]
-        );
+        function success(message, data, title) {
+            toastr.success(message, title);
+            $log.success('Success: ' + message, data);
+        }
+
+        function warning(message, data, title) {
+            toastr.warning(message, title);
+            $log.warn('Warning: ' + message, data);
+        }
+    }
 
 })();

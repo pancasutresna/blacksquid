@@ -12,7 +12,8 @@ exports.createUser = function(req, res, next) {
     // lower case registered username
     userData.username = userData.username.toLowerCase();
     userData.salt = encrypt.createSalt();
-    userData.hashPwd = encrypt.hashPwd(userData.salt, userData.password);
+    console.log('PASSWORD: ' + userData.password);
+    userData.hashedPwd = encrypt.hashPwd(userData.salt, userData.password);
 
     User.create(userData, function(err, user) {
         if (err) {

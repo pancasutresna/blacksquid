@@ -2,25 +2,25 @@
     'use strict';
 
     angular
-        .module('app.user')
-        .factory(
-            'mvUser',
-            ['$resource',
-            function($resource) {
-                var UserResource = $resource('/api/users/:id', {
-                    _id: '@id'
-                }, {
-                    update: {
-                        method: 'PUT',
-                        isArray: false
-                    }
-                });
+    .module('app.user')
+    .factory('mvUser', mvUser);
 
-                UserResource.prototype.isAdmin  = function() {
-                    return this.roles && this.roles.indexOf('admin') > -1;
-                };
+    mvUser.$inject = ['$resource'];
+    function mvUser($resource) {
+        var UserResource = $resource('/api/users/:id', {
+            _id: '@id'
+        }, {
+            update: {
+                method: 'PUT',
+                isArray: false
+            }
+        });
 
-                return UserResource;
-            }]
-        );
+        UserResource.prototype.isAdmin  = function() {
+            return this.roles && this.roles.indexOf('admin') > -1;
+        };
+
+        return UserResource;
+    }
+
 })();

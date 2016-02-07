@@ -2,19 +2,19 @@
     'use strict';
 
     angular
-        .module('app.place')
-        .controller(
-            'mvPlaceListCtrl',
-            ['$scope', 'mvCachedPlace',
-            function($scope, mvCachedPlace) {
-                $scope.places = mvCachedPlace.query();
+    .module('app.place')
+    .controller('mvPlaceListCtrl', mvPlaceListCtrl);
 
-                $scope.sortOptions = [
-                    {value: 'title', text: 'Sort by Title'},
-                    {value: 'published', text: 'Sort by publish data'}
-                ];
+    mvPlaceListCtrl.$inject =  ['$scope', 'mvCachedPlace'];
+    function mvPlaceListCtrl($scope, mvCachedPlace) {
+        $scope.places = mvCachedPlace.query();
 
-                $scope.sortOrder = $scope.sortOptions[0].value;
-            }]
-        );
+        $scope.sortOptions = [
+            {value: 'title', text: 'Sort by Title'},
+            {value: 'published', text: 'Sort by publish data'}
+        ];
+
+        $scope.sortOrder = $scope.sortOptions[0].value;
+    }
+
 })();
