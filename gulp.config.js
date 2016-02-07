@@ -33,6 +33,7 @@ module.exports = function() {
         temp: temp,
         index: client + 'index.html',
         fonts: './bower_components/font-awesome/fonts/**/*.*',
+        html: clientApp + '**/*.html',
         htmltemplates: clientApp + '**/*.html',
         images: client + 'images/**/*.*',
         js: [
@@ -44,6 +45,10 @@ module.exports = function() {
         jade: [
             client + '**/*.jade'
         ],
+        /**
+         * Browser sync
+         */
+        browserReloadDelay: 1000,
         /**
          * template cahce
          */

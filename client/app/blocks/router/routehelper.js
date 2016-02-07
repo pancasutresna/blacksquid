@@ -3,124 +3,126 @@
 
     angular
         .module('blocks.router')
-        .provider('routehelperConfig', routehelperConfig)
-        .factory('routehelper', routehelper);
+        .provider('routehelperConfig',
+            [function routehelperConfig() {
+                this.config = {
+                    // These are the properties we need to set
+                    // $routeProvider: undefined
+                    // docTitle: ''
+                    // resolveAlways: {ready: function(){ } }
+                };
 
-    function routehelperConfig() {
-        this.config = {
-            // These are the properties we need to set
-            // $routeProvider: undefined
-            // docTitle: ''
-            // resolveAlways: {ready: function(){ } }
-        };
+                this.$get = function() {
+                    return {
+                        config: this.config
+                    };
+                };
+            }]
+        )
+        .factory(
+            'routehelper',
+            ['$location', '$rootScope', '$route', 'logger', 'routehelperConfig', 'mvAuth',
+            function($location, $rootScope, $route, logger, routehelperConfig, mvAuth) {
+                var handlingRouteChangeError = false;
+                var routeCounts = {
+                    errors: 0,
+                    changes: 0
+                };
+                var routes = [];
+                var $routeProvider = routehelperConfig.config.$routeProvider;
 
-        this.$get = function() {
-            return {
-                config: this.config
-            };
-        };
-    }
-
-    routehelper.$inject = ['$location', '$rootScope', '$route', 'logger', 'routehelperConfig', 'mvAuth'];
-    function routehelper($location, $rootScope, $route, logger, routehelperConfig, mvAuth) {
-        var handlingRouteChangeError = false;
-        var routeCounts = {
-            errors: 0,
-            changes: 0
-        };
-        var routes = [];
-        var $routeProvider = routehelperConfig.config.$routeProvider;
-
-        var routeRoleChecks = {
-            admin: {
-                auth: function(mvAuth) {
-                    return mvAuth.authorizeCurrentUserForRoute('admin');
-                }
-            },
-            user: {
-                auth: function(mvAuth) {
-                    return mvAuth.authorizeAuthenticatedUserForRoute();
-                }
-            }
-        };
-
-        /**
-         * Define expossed services
-         */
-        var service = {
-            routeRoleChecks: routeRoleChecks,
-            configureRoutes: configureRoutes,
-            getRoutes: getRoutes,
-            routeCounts: routeCounts
-
-        };
-
-        init();
-
-        return service;
-
-        ////////////////////////////////////////////
-        /**
-         * Service implementation details
-         */
-
-        function configureRoutes(routes) {
-            routes.forEach(function(route) {
-                route.config.resolve =
-                    angular.extend(route.config.resolve || {},
-                        routehelperConfig.config.resolveAlways);
-                $routeProvider.when(route.url, route.config);
-            });
-            $routeProvider.otherwise({redirectTo: '/'});
-        }
-
-        function handleRoutingErrors() {
-            // Route cancellation:
-            // On routing error, go to the dashboard.
-            // Provide an exit clause if it tries to do it twice.
-            $rootScope.$on('$routeChangeError',
-                function(event, current, previous, rejection) {
-                    if (handlingRouteChangeError) {
-                        return;
+                var routeRoleChecks = {
+                    admin: {
+                        auth: ['mvAuth', function(mvAuth) {
+                            return mvAuth.authorizeCurrentUserForRoute('admin');
+                        }]
+                    },
+                    user: {
+                        auth: ['mvAuth', function(mvAuth) {
+                            return mvAuth.authorizeAuthenticatedUserForRoute();
+                        }]
                     }
-                    routeCounts.errors++;
-                    handlingRouteChangeError = true;
-                    var destination = (current &&
-                        (current.title || current.name || current.loadedTemplateUrl)) || 'unknown target';
-                    var msg = 'Error routing to ' + destination + '. ' + (rejection.msg || '');
-                    logger.warning(msg, [current]);
-                    $location.path('/');
+                };
+
+                /**
+                 * Define expossed services
+                 */
+                var service = {
+                    routeRoleChecks: routeRoleChecks,
+                    configureRoutes: configureRoutes,
+                    getRoutes: getRoutes,
+                    routeCounts: routeCounts
+                };
+
+                init();
+
+                return service;
+
+                ////////////////////////////////////////////
+                /**
+                 * Service implementation details
+                 */
+
+                function configureRoutes(routes) {
+                    routes.forEach(function(route) {
+                        route.config.resolve =
+                            angular.extend(route.config.resolve || {},
+                                routehelperConfig.config.resolveAlways);
+                        $routeProvider.when(route.url, route.config);
+                    });
+                    $routeProvider.otherwise({redirectTo: '/'});
                 }
-            );
-        }
 
-        function init() {
-            handleRoutingErrors();
-            updateDocTitle();
-        }
+                function handleRoutingErrors() {
+                    // Route cancellation:
+                    // On routing error, go to the dashboard.
+                    // Provide an exit clause if it tries to do it twice.
+                    $rootScope.$on(
+                        '$routeChangeError',
+                        function(event, current, previous, rejection) {
+                            if (handlingRouteChangeError) {
+                                return;
+                            }
+                            routeCounts.errors++;
+                            handlingRouteChangeError = true;
+                            var destination = (current &&
+                                (current.title || current.name || current.loadedTemplateUrl)) || 'unknown target';
+                            var msg = 'Error routing to ' + destination + '. ' + (rejection.msg || '');
+                            logger.warning(msg, [current]);
+                            $location.path('/');
+                        }
+                    );
+                }
 
-        function getRoutes() {
-            for (var prop in $route.routes) {
-                if ($route.routes.hasOwnProperty(prop)) {
-                    var route = $route.routes[prop];
-                    var isRoute = !!route.title;
-                    if (isRoute) {
-                        routes.push(route);
+                function init() {
+                    handleRoutingErrors();
+                    updateDocTitle();
+                }
+
+                function getRoutes() {
+                    for (var prop in $route.routes) {
+                        if ($route.routes.hasOwnProperty(prop)) {
+                            var route = $route.routes[prop];
+                            var isRoute = !!route.title;
+                            if (isRoute) {
+                                routes.push(route);
+                            }
+                        }
                     }
+                    return routes;
                 }
-            }
-            return routes;
-        }
 
-        function updateDocTitle() {
-            $rootScope.$on('$routeChangeSuccess',
-                function(event, current, previous) {
-                    routeCounts.changes++;
-                    handlingRouteChangeError = false;
-                    var title = routehelperConfig.config.docTitle + ' ' + (current.title || '');
-                    $rootScope.title = title; // data bind to <title>
+                function updateDocTitle() {
+                    $rootScope.$on(
+                        '$routeChangeSuccess',
+                        function(event, current, previous) {
+                            routeCounts.changes++;
+                            handlingRouteChangeError = false;
+                            var title = routehelperConfig.config.docTitle + ' ' + (current.title || '');
+                            $rootScope.title = title; // data bind to <title>
+                        }
+                    );
                 }
-            );
-        }
-    }
+            }]
+        );
 })();

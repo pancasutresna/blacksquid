@@ -3,17 +3,21 @@
 
     angular
         .module('app.place')
-        .factory('mvCachedPlace', function(mvPlace) {
-            var placeList;
+        .factory(
+            'mvCachedPlace',
+            ['mvPlace',
+            function(mvPlace) {
+                var placeList;
 
-            return {
-                query: function() {
-                    if (!placeList) {
-                        placeList = mvPlace.query();
+                return {
+                    query: function() {
+                        if (!placeList) {
+                            placeList = mvPlace.query();
+                        }
+
+                        return placeList;
                     }
-
-                    return placeList;
-                }
-            };
-        });
+                };
+            }]
+        );
 })();

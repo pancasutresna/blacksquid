@@ -2,8 +2,12 @@
     'use strict';
 
     angular
-        .module('app')
-        .controller('mvMainCtrl', function($scope, mvCachedPlace) {
-            $scope.places = mvCachedPlace.query();
-        });
+        .module('app.main')
+        .controller(
+            'mvMainCtrl',
+            ['$scope', 'mvCachedPlace',
+            function($scope, mvCachedPlace) {
+                $scope.places = mvCachedPlace.query();
+            }]
+        );
 })();

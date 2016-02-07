@@ -36,8 +36,8 @@ gulp.task('inspect', function() {
     return gulp
         .src(config.allJs)
         .pipe($.if(args.verbose, $.print()))
-        .pipe($.jscs()) // jscs check
-        .pipe($.jshint()) // jshint check
+        .pipe($.jscs())
+        .pipe($.jshint())
         .pipe($.jshint.reporter(
             'jshint-stylish', {
                 verbose: true
@@ -72,7 +72,7 @@ gulp.task('images', ['clean-images'], function() {
         .pipe($.imagemin({
             optimizationLevel: 4
         }))
-        .pipe(gulp.dest(config.build + 'images'));    
+        .pipe(gulp.dest(config.build + 'images'));
 });
 
 /* ===========================================================================
@@ -135,11 +135,13 @@ gulp.task('inject', ['styles', 'templatecache'], function() {
  * injection to all needed assets (javascript, css and template cache) created
  * during the build.
  * =========================================================================== */
-gulp.task('optimize', ['inject'], function() {
+gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
     log($.util.colors.yellow('### TASK OPTIMIZE ###'));
     log($.util.colors.yellow('Optimizing assets and injecting templateCache....'));
 
     var templateCache = config.temp + config.templateCache.file;
+    var cssFilter = $.filter(['**/*.css'], {restore: true});
+    var jsFilter = $.filter(['**/*.js'], {restore: true});
 
     return gulp
         .src(config.index)
@@ -148,46 +150,37 @@ gulp.task('optimize', ['inject'], function() {
             starttag: '<!-- inject:templates:js -->'    // injecting templateCache into index.html
         }))
         .pipe($.useref({ searchPath: './' })) // look for the assets in this path
+        .pipe(cssFilter) // filter css files only
+        .pipe($.csso()) // minify css
+        .pipe(cssFilter.restore) // restore css files to stream
+        .pipe(jsFilter) // filter js files only
+        .pipe($.uglify())
+        //.pipe($.uglify({mangle: false}))
+        .pipe(jsFilter.restore) // restore to stream
         .pipe(gulp.dest(config.build));
 });
 
 /* ===========================================================================
- * This task will start server and serve development build
+ * This task will start server and serve production ready optimized code
+ * =========================================================================== */
+gulp.task('serve-prod', ['optimize'], function() {
+    log($.util.colors.yellow('### SERV PRODUCTION BUILD ###'));
+    log($.util.colors.yellow('Serving production code....'));
+
+    // pass the value of is development is true, 
+    // mean it's production
+    serve(false); 
+});
+
+/* ===========================================================================
+ * This task will start server and serve development code
  * =========================================================================== */
 gulp.task('serve-dev', ['inject'], function() {
     log($.util.colors.yellow('### SERV DEVELOPMENT BUILD ###'));
-    log($.util.colors.yellow('Serving development build....'));
+    log($.util.colors.yellow('Serving development code....'));
 
-    var isDev = true; // TODO: Remove hard coded value
-    var nodeOptions = {
-        script: config.nodeServer,
-        delayTime: 1,
-        env: {
-            'PORT': port,
-            'NODE_ENV': isDev ? 'development' : 'production',
-        },
-        watch: [config.server]
-    };
-
-    // watch nodemon states and perform necessary action 
-    return $.nodemon(nodeOptions)
-        .on('restart', function(ev) {
-            log($.util.colors.yellow('### NODEMON RESTARTED ###'));
-            log($.util.colors.yellow('Files changed on restart: \n' + ev));
-        })
-        .on('start', function() {
-            log($.util.colors.green('### NODEMON STARTED ###'));
-            log($.util.colors.green('Starting browserSync....'));
-
-            //startBrowserSync();
-        })
-        .on('crash', function() {
-            log($.util.colors.red('### NODEMON CRASHED ###'));
-            log($.util.colors.red('Script crashed for some reason....'));
-        })
-        .on('exit', function() {
-            log($.util.colors.green('### NODEMON EXITING ###'));
-        });
+    // pass the value of is development is true
+    serve(true); 
 });
 
 /* ###########################################################################
@@ -300,23 +293,79 @@ gulp.task('watch-scss', function() {
 
 ///////////////////////////////////////////////////////////
 
+function serve(isDev) {
+    var nodeOptions = {
+        script: config.nodeServer,
+        delayTime: 1,
+        env: {
+            'PORT': port,
+            'NODE_ENV': isDev ? 'development' : 'production',
+        },
+        watch: [config.server]
+    };
+
+    // watch nodemon states  and perform necessary action 
+    return $.nodemon(nodeOptions)
+        .on('restart', function(ev) {
+            log($.util.colors.yellow('### NODEMON RESTARTED ###'));
+            log($.util.colors.yellow('Files changed on restart: \n' + ev));
+
+            setTimeout(function() {
+                browserSync.notify('Reloading browser-sync....');
+                browserSync.reload({stream: false});
+            }, config.browserReloadDelay);
+        })
+        .on('start', function() {
+            log($.util.colors.green('### NODEMON STARTED ###'));
+            log($.util.colors.green('Restarting nodemon....'));
+
+            startBrowserSync(isDev);
+        })
+        .on('crash', function() {
+            log($.util.colors.red('### NODEMON CRASHED ###'));
+            log($.util.colors.red('Script crashed for some reason....'));
+        })
+        .on('exit', function() {
+            log($.util.colors.green('### NODEMON EXITING ###'));
+        });
+}
+
+function changeEvent(event) {
+    var srcPattern = new RegExp('/.*(?=/' + config.client + ')/' );
+    log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
+}
+
 /**
  * Start browserSync
  * @return void
  */
-function startBrowserSync() {
+function startBrowserSync(isDev) {
+    var host = 'localhost:';
 
-    var host = 'localhost';
-
-    // check if it's already activated
-    if (browserSync.active) {
+    // check if it's already running
+    // and if there is --nosync command line parameter passed
+    if (args.nosync || browserSync.active) {
         return;
     }
+
+    if(isDev) {
+        // watching sass files
+        gulp.watch([config.sass], ['styles'])
+            .on('change', function(event) { changeEvent(event); });
+    } else {
+        // watching sass files
+        gulp.watch([config.sass, config.js, config.html], ['optimize', browserSync.reload])
+            .on('change', function(event) { changeEvent(event); });
+    }
+
 
     var options = {
         proxy: host + port,
         port: 3000,
-        files: [config.client + '**/*.*'],
+        files: isDev ? [
+            config.client + '**/*.*',
+            '!' + config.sass
+        ] : [],
         ghostMode: {
             clicks: true,
             location: false,
@@ -326,7 +375,7 @@ function startBrowserSync() {
         injectChanges: true,
         logFileChanges: true,
         logLevel: 'debug',
-        logPrefix: 'gulp-patterns',
+        logPrefix: $.util.colors.yellow('### BROWSER-SYNC >>'),
         notify: true,
         reloadDelay: 0
     };

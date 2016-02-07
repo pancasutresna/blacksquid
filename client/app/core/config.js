@@ -2,14 +2,10 @@
     'use strict';
 
     var core = angular.module('app.core');
-
-    core.config(toastrConfig);
-
-    toastrConfig.$inject = ['toastr'];
-    function toastrConfig(toastr) {
+    core.config(['toastr', function(toastr) {
         toastr.options.timeOut = 4000;
         toastr.options.positionClass = 'toast-bottom-right';
-    }
+    }]);
 
     var config = {
         appErrorPrefix: '[black squid Error]',
@@ -18,48 +14,34 @@
     };
 
     core.value('config', config);
+    core.config(
+        ['$logProvider', '$routeProvider', '$locationProvider', 'routehelperConfigProvider', 'exceptionHandlerProvider',
+        function($logProvider, $routeProvider, $locationProvider, routehelperConfigProvider, exceptionHandlerProvider) {
 
-    core.config(configure);
+            if ($logProvider.debugEnabled) {
+                $logProvider.debugEnabled(true);
+            }
 
-    /**
-     *
-     * @param $logProvider
-     * @param $routeProvider
-     * @param routeHelperConfigProvider
-     * @param exceptionHandlerProvider
-     */
-    /*
-     * routehelperConfigProvider -> routehelperConfig + suffix (Provider) as well as exceptionHandlerProvider
-     */
-    configure.$inject = ['$logProvider', '$routeProvider', '$locationProvider',
-                         'routehelperConfigProvider', 'exceptionHandlerProvider'];
-    function configure($logProvider, $routeProvider, $locationProvider,
-                        routehelperConfigProvider, exceptionHandlerProvider) {
+            $locationProvider.html5Mode({
+                enabled: true,
+                requireBase: false
+            });
 
-        if ($logProvider.debugEnabled) {
-            $logProvider.debugEnabled(true);
-        }
+            // configure commmon route provider
+            routehelperConfigProvider.config.$routeProvider = $routeProvider;
+            routehelperConfigProvider.config.docTitle = 'black squid';
 
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
-        });
+            var resolveAlways = {
+                //ready: ['dataservice', function(dataservice){
+                //    return dataservice.ready();
+                //}]
+            };
 
-        // configure commmon route provider
-        routehelperConfigProvider.config.$routeProvider = $routeProvider;
-        routehelperConfigProvider.config.docTitle = 'black squid';
+            routehelperConfigProvider.config.resolveAlways = resolveAlways;
+            //
+            //// Configure the common exception handler
+            exceptionHandlerProvider.configure(config.appErrorPrefix);
 
-        var resolveAlways = {
-            //ready: ['dataservice', function(dataservice){
-            //    return dataservice.ready();
-            //}]
-        };
-
-        routehelperConfigProvider.config.resolveAlways = resolveAlways;
-        //
-        //// Configure the common exception handler
-        exceptionHandlerProvider.configure(config.appErrorPrefix);
-
-    }
-
+        }]
+    );
 })();

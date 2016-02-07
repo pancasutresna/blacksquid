@@ -3,23 +3,23 @@
 
     angular
         .module('app.admin')
-        .run(routeConfig);
+        .run(
+            ['routehelper',
+            function(routehelper) {
 
-    routeConfig.$inject = ['routehelper'];
-    function routeConfig(routehelper) {
-        var routes = [
-            {
-                url: '/admin/users',
-                config: {
-                    // templateUrl: '/partials/admin/user-list',
-                    templateUrl: '/app/admin/user-list.html',
-                    controller: 'mvAdminUserListCtrl',
-                    resolve: routehelper.routeRoleChecks.admin
-                }
-            }
-        ];
+                var routes = [
+                    {
+                        url: '/admin/users',
+                        config: {
+                            templateUrl: '/app/admin/user-list.html',
+                            controller: 'mvAdminUserListCtrl',
+                            resolve: routehelper.routeRoleChecks.admin
+                        }
+                    }
+                ];
 
-        routehelper.configureRoutes(routes);
-    }
+                routehelper.configureRoutes(routes);
+            }]
+        );
 
 })();

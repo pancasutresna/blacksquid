@@ -3,27 +3,28 @@
 
     angular
         .module('blocks.exception')
-        .factory('exception', exception);
+        .factory(
+            'exception', 
+            ['logger',
+            function(logger) {
+                /*
+                 * Define expossed services
+                 */
+                var service = {
+                    catcher: catcher
+                };
 
-    exception.$inject = ['logger'];
-    function exception(logger) {
-        /*
-         * Define expossed services
-         */
-        var service = {
-            catcher: catcher
-        };
+                return service;
 
-        return service;
-
-        //////////////////////////////////
-        /*
-         * Service implementation details
-         */
-        function catcher(message) {
-            return function(reason) {
-                logger.error(message, reason);
-            };
-        }
-    }
+                //////////////////////////////////
+                /*
+                 * Service implementation details
+                 */
+                function catcher(message) {
+                    return function(reason) {
+                        logger.error(message, reason);
+                    };
+                }
+            }]
+        );
 })();

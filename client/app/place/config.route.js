@@ -3,34 +3,28 @@
 
     angular
         .module('app.place')
-        .run(appRun);
+        .run(
+            ['routehelper',
+            function(routehelper) {
 
-    /*
-     * Call routehelper on module blocks.router
-     */
-    appRun.$inject = ['routehelper'];
-    function appRun(routehelper) {
-        routehelper.configureRoutes(getRoutes());
-    }
+                var routes = [
+                    {
+                        url: '/places',
+                        config: {
+                            templateUrl: '/app/place/place-list.html',
+                            controller: 'mvPlaceListCtrl'
+                        }
+                    },
+                    {
+                        url: '/places/:id',
+                        config: {
+                            templateUrl: '/app/place/place-detail.html',
+                            controller: 'mvPlaceDetailCtrl'
+                        }
+                    }
+                ];
 
-    function getRoutes() {
-        return [
-            {
-                url: '/places',
-                config: {
-                    // templateUrl: '/partials/place/place-list',
-                    templateUrl: '/app/place/place-list.html',
-                    controller: 'mvPlaceListCtrl'
-                }
-            },
-            {
-                url: '/places/:id',
-                config: {
-                    // templateUrl: '/partials/place/place-detail',
-                    templateUrl: '/app/place/place-detail.html',
-                    controller: 'mvPlaceDetailCtrl'
-                }
-            }
-        ];
-    }
+                routehelper.configureRoutes(routes);
+            }]
+        );
 })();

@@ -25,6 +25,9 @@ module.exports = function(app, config) {
         break;
     }
 
+    app.set('views', path.join(config.rootPath, 'client'));
+    app.set('view engine', 'jade');
+
     app.use(logger('dev'));
     app.use(cookieParser());
     app.use(bodyParser.json());

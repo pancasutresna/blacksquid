@@ -19,7 +19,7 @@
     <!-- endbuild -->
 </head>
 
-<body ng-app="app">
+<body ng-app="app"  ng-strict-di>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header"><a href="/" class="navbar-brand">Blacksquid</a></div>
@@ -61,8 +61,8 @@
     <script src="/client/app/auth/auth.module.js"></script>
     <script src="/client/app/core/core.module.js"></script>
     <script src="/client/app/main/main.module.js"></script>
-    <script src="/client/app/user/user.module.js"></script>
     <script src="/client/app/place/place.module.js"></script>
+    <script src="/client/app/user/user.module.js"></script>
     <script src="/client/app/blocks/exception/exception.module.js"></script>
     <script src="/client/app/blocks/logger/logger.module.js"></script>
     <script src="/client/app/blocks/router/router.module.js"></script>
@@ -78,13 +78,13 @@
     <script src="/client/app/core/constants.js"></script>
     <script src="/client/app/main/config.route.js"></script>
     <script src="/client/app/main/mvMainCtrl.js"></script>
-    <script src="/client/app/user/config.route.js"></script>
-    <script src="/client/app/user/mvUser.js"></script>
     <script src="/client/app/place/config.route.js"></script>
     <script src="/client/app/place/mvCachedPlace.js"></script>
     <script src="/client/app/place/mvPlace.js"></script>
     <script src="/client/app/place/mvPlaceDetailCtrl.js"></script>
     <script src="/client/app/place/mvPlaceListCtrl.js"></script>
+    <script src="/client/app/user/config.route.js"></script>
+    <script src="/client/app/user/mvUser.js"></script>
     <script src="/client/app/util/mvNotifier.js"></script>
     <script src="/client/app/blocks/exception/exception-handler.provider.js"></script>
     <script src="/client/app/blocks/exception/exception.js"></script>
