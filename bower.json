@@ -1,5 +1,6 @@
 {
   "name": "blacksquid",
+  "version": "0.1.0",
   "description": "Directory Website",
   "main": "index.js",
   "authors": [

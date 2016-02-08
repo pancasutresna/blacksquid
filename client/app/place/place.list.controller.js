@@ -3,11 +3,11 @@
 
     angular
     .module('app.place')
-    .controller('mvPlaceListCtrl', mvPlaceListCtrl);
+    .controller('PlaceListController', PlaceListController);
 
-    mvPlaceListCtrl.$inject =  ['$scope', 'mvCachedPlace'];
-    function mvPlaceListCtrl($scope, mvCachedPlace) {
-        $scope.places = mvCachedPlace.query();
+    PlaceListController.$inject =  ['$scope', 'PlaceResourceCache'];
+    function PlaceListController($scope, PlaceResourceCache) {
+        $scope.places = PlaceResourceCache.query();
 
         $scope.sortOptions = [
             {value: 'title', text: 'Sort by Title'},

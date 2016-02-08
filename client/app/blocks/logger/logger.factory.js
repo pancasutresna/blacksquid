@@ -3,10 +3,10 @@
 
     angular
     .module('blocks.logger')
-    .factory('logger', logger);
+    .factory('LoggerFactory', LoggerFactory);
 
-    logger.$inject = ['$log', 'toastr'];
-    function logger($log, toastr) {
+    LoggerFactory.$inject = ['$log', 'toastr'];
+    function LoggerFactory($log, toastr) {
 
         var service = {
             showToasts: true,

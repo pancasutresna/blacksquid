@@ -5,27 +5,27 @@
     .module('app.place')
     .run(routeConfig);
 
-    routeConfig.$inject = ['routehelper'];
-    function routeConfig(routehelper) {
+    routeConfig.$inject = ['RouterFactory'];
+    function routeConfig(RouterFactory) {
 
         var routes = [
             {
                 url: '/places',
                 config: {
                     templateUrl: '/app/place/place-list.html',
-                    controller: 'mvPlaceListCtrl'
+                    controller: 'PlaceListController'
                 }
             },
             {
                 url: '/places/:id',
                 config: {
                     templateUrl: '/app/place/place-detail.html',
-                    controller: 'mvPlaceDetailCtrl'
+                    controller: 'PlaceDetailController'
                 }
             }
         ];
 
-        routehelper.configureRoutes(routes);
+        RouterFactory.configureRoutes(routes);
     }
 
 })();

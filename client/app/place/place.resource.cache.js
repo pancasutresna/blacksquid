@@ -3,16 +3,16 @@
 
     angular
     .module('app.place')
-    .factory('mvCachedPlace', mvCachedPlace);
+    .factory('PlaceResourceCache', PlaceResourceCache);
 
-    mvCachedPlace.$inject = ['mvPlace'];
-    function mvCachedPlace(mvPlace) {
+    PlaceResourceCache.$inject = ['PlaceResource'];
+    function PlaceResourceCache(PlaceResource) {
         var placeList;
 
         return {
             query: function() {
                 if (!placeList) {
-                    placeList = mvPlace.query();
+                    placeList = PlaceResource.query();
                 }
 
                 return placeList;

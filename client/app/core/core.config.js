@@ -13,9 +13,9 @@
     core.config(configure);
 
     configure.$inject = ['$logProvider', '$routeProvider', '$locationProvider',
-    'routehelperConfigProvider', 'exceptionHandlerProvider'];
+    'RouterConfigProvider', 'ExceptionHandlerProvider'];
     function configure($logProvider, $routeProvider, $locationProvider,
-        routehelperConfigProvider, exceptionHandlerProvider) {
+        RouterConfigProvider, ExceptionHandlerProvider) {
 
         if ($logProvider.debugEnabled) {
             $logProvider.debugEnabled(true);
@@ -27,8 +27,8 @@
         });
 
         // configure commmon route provider
-        routehelperConfigProvider.config.$routeProvider = $routeProvider;
-        routehelperConfigProvider.config.docTitle = 'black squid';
+        RouterConfigProvider.config.$routeProvider = $routeProvider;
+        RouterConfigProvider.config.docTitle = 'black squid';
 
         var resolveAlways = {
             //ready: ['dataservice', function(dataservice){
@@ -36,10 +36,10 @@
             //}]
         };
 
-        routehelperConfigProvider.config.resolveAlways = resolveAlways;
+        RouterConfigProvider.config.resolveAlways = resolveAlways;
         //
         //// Configure the common exception handler
-        exceptionHandlerProvider.configure(config.appErrorPrefix);
+        ExceptionHandlerProvider.configure(config.appErrorPrefix);
     }
 
     toastrConfig.$inject = ['toastr'];

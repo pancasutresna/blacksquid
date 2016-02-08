@@ -28,7 +28,7 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="/places">Browse Places</a></li>
                 </ul>
-                <div ng-include="'/app/auth/form-login.html'"></div>
+                <div ng-include="'/app/user/form-login.html'"></div>
             </div>
         </div>
     </div>
@@ -57,38 +57,37 @@
     <!-- build:js /js/app.js -->
     <!-- inject:js -->
     <script src="/client/app/app.module.js"></script>
-    <script src="/client/app/admin/admin.module.js"></script>
-    <script src="/client/app/auth/auth.module.js"></script>
-    <script src="/client/app/core/core.module.js"></script>
     <script src="/client/app/main/main.module.js"></script>
+    <script src="/client/app/core/core.module.js"></script>
     <script src="/client/app/place/place.module.js"></script>
     <script src="/client/app/user/user.module.js"></script>
-    <script src="/client/app/blocks/logger/logger.module.js"></script>
+    <script src="/client/app/admin/user/admin.user.module.js"></script>
     <script src="/client/app/blocks/exception/exception.module.js"></script>
     <script src="/client/app/blocks/router/router.module.js"></script>
-    <script src="/client/app/admin/config.route.js"></script>
-    <script src="/client/app/admin/mvAdminUserListCtrl.js"></script>
-    <script src="/client/app/auth/config.route.js"></script>
-    <script src="/client/app/auth/mvAuth.js"></script>
-    <script src="/client/app/auth/mvIdentity.js"></script>
-    <script src="/client/app/auth/mvLoginCtrl.js"></script>
-    <script src="/client/app/auth/mvProfileCtrl.js"></script>
-    <script src="/client/app/auth/mvSignupCtrl.js"></script>
-    <script src="/client/app/core/config.js"></script>
-    <script src="/client/app/core/constants.js"></script>
-    <script src="/client/app/main/config.route.js"></script>
-    <script src="/client/app/main/mvMainCtrl.js"></script>
-    <script src="/client/app/place/config.route.js"></script>
-    <script src="/client/app/place/mvCachedPlace.js"></script>
-    <script src="/client/app/place/mvPlace.js"></script>
-    <script src="/client/app/place/mvPlaceDetailCtrl.js"></script>
-    <script src="/client/app/place/mvPlaceListCtrl.js"></script>
-    <script src="/client/app/user/config.route.js"></script>
-    <script src="/client/app/user/mvUser.js"></script>
-    <script src="/client/app/blocks/logger/logger.js"></script>
-    <script src="/client/app/blocks/exception/exception-handler.provider.js"></script>
-    <script src="/client/app/blocks/exception/exception.js"></script>
-    <script src="/client/app/blocks/router/routehelper.js"></script>
+    <script src="/client/app/blocks/logger/logger.module.js"></script>
+    <script src="/client/app/main/main.controller.js"></script>
+    <script src="/client/app/main/main.route.js"></script>
+    <script src="/client/app/core/core.config.js"></script>
+    <script src="/client/app/core/core.constants.js"></script>
+    <script src="/client/app/place/place.detail.controller.js"></script>
+    <script src="/client/app/place/place.list.controller.js"></script>
+    <script src="/client/app/place/place.resource.cache.js"></script>
+    <script src="/client/app/place/place.resource.js"></script>
+    <script src="/client/app/place/place.route.js"></script>
+    <script src="/client/app/user/identity.factory.js"></script>
+    <script src="/client/app/user/login.controller.js"></script>
+    <script src="/client/app/user/profile.controller.js"></script>
+    <script src="/client/app/user/signup.controller.js"></script>
+    <script src="/client/app/user/user.factory.js"></script>
+    <script src="/client/app/user/user.resource.js"></script>
+    <script src="/client/app/user/user.route.js"></script>
+    <script src="/client/app/admin/user/admin.user.controller.js"></script>
+    <script src="/client/app/admin/user/admin.user.route.js"></script>
+    <script src="/client/app/blocks/exception/exception.factory.js"></script>
+    <script src="/client/app/blocks/exception/exception.handler.provider.js"></script>
+    <script src="/client/app/blocks/router/router.config.provider.js"></script>
+    <script src="/client/app/blocks/router/router.factory.js"></script>
+    <script src="/client/app/blocks/logger/logger.factory.js"></script>
     <!-- endinject -->
 
     <!-- inject:templates:js -->

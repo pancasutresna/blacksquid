@@ -6,8 +6,10 @@ module.exports = function() {
     var server = './server/';
     var dist = './dist/';
     var temp = './tmp/';
+    var root = './';
 
     var config  = {
+        root: root,
         css: client + 'css/style.css',
         /*
          * File paths
@@ -72,6 +74,10 @@ module.exports = function() {
             directory: './bower_components',
             ignorePath: '..'
         },
+        packages: [
+            './package.json',
+            './bower.json'
+        ],
         /**
          * Node settings
          */

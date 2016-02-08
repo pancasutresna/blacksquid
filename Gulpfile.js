@@ -143,6 +143,7 @@ gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
     var cssFilter = $.filter(['**/*.css'], {restore: true});
     var jsLibFilter = $.filter(['**/' + config.optimized.lib], {restore: true});
     var jsAppFilter = $.filter(['**/' + config.optimized.app], {restore: true});
+    var notIndexFilter = $.filter(['**/*', '!**/index.html'], {restore: true});
 
     return gulp
         .src(config.index)
@@ -150,7 +151,7 @@ gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
         .pipe($.inject(gulp.src(templateCache, {read: false}), {
             starttag: '<!-- inject:templates:js -->'    // injecting templateCache into index.html
         }))
-        .pipe($.useref({ searchPath: './' })) // look for the assets in this path
+        .pipe($.useref({searchPath: './'})) // look for the assets in this path
         .pipe(cssFilter) // filter css files only
         .pipe($.csso()) // minify css
         .pipe(cssFilter.restore) // restore css files to stream
@@ -159,9 +160,46 @@ gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
         .pipe(jsLibFilter.restore) // restore to stream
         .pipe(jsAppFilter) // filter app.js files only
         .pipe($.ngAnnotate()) // inject
-        .pipe($.uglify()) 
+        .pipe($.uglify())
         .pipe(jsAppFilter.restore) // restore to stream
+        .pipe(notIndexFilter)
+        .pipe($.rev())
+        .pipe(notIndexFilter.restore)
+        .pipe($.revReplace())
+        .pipe(gulp.dest(config.build))
+        .pipe($.rev.manifest())
         .pipe(gulp.dest(config.build));
+});
+
+/* ===========================================================================
+ * This task will bump the version into package.json
+ * --type=pre               will bump the pre-release version *.*.*-x
+ * --type=patch or no flag  will bump the patch version *.*.x
+ * --type=minor             will bump the minor version *.x.*
+ * --type=major             will bump the major version x.*.*
+ * --version=1.2.3          will bump to a specific version and ignore other flags
+ * =========================================================================== */
+gulp.task('bump', function() {
+    var msg = '### BUMPING VERSIONS -';
+    var type = args.type;
+    var version = args.version;
+    var options = {};
+
+    if (version) {
+        options.version = version;
+        msg += ' to ' + version;
+    } else {
+        options.type = type;
+        msg += ' for a ' + type;
+    }
+
+    log($.util.colors.yellow(msg));
+
+    return gulp
+        .src(config.packages)
+        .pipe($.print())
+        .pipe($.bump(options))
+        .pipe(gulp.dest(config.root));
 });
 
 /* ===========================================================================
@@ -215,6 +253,7 @@ gulp.task('clean-code', function() {
     var files = [].concat(
         config.temp + '**/*.js',
         config.build + '**/*.html',
+        config.build + '**/*.css',
         config.build + 'js/**/*.js'
     );
 

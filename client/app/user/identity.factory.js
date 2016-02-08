@@ -2,18 +2,18 @@
     'use strict';
 
     angular
-    .module('app.auth')
-    .factory('mvIdentity', mvIdentity);
+    .module('app.user')
+    .factory('IdentityFactory', IdentityFactory);
 
-    mvIdentity.$inject = ['$window', '$cookieStore', 'mvUser'];
-    function mvIdentity($window, $cookieStore, mvUser) {
+    IdentityFactory.$inject = ['$window', '$cookieStore', 'UserResource'];
+    function IdentityFactory($window, $cookieStore, UserResource) {
 
         var currentUser;
         /**
          * get currentUser object from $cookieStore
          */
         if (!!$cookieStore.get('bootstrappedUser')) {
-            currentUser = new mvUser();
+            currentUser = new UserResource();
             angular.extend(currentUser, $cookieStore.get('bootstrappedUser'));
         }
 

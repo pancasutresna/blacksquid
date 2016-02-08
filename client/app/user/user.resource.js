@@ -3,11 +3,11 @@
 
     angular
     .module('app.user')
-    .factory('mvUser', mvUser);
+    .factory('UserResource', UserResource);
 
-    mvUser.$inject = ['$resource'];
-    function mvUser($resource) {
-        var UserResource = $resource('/api/users/:id', {
+    UserResource.$inject = ['$resource'];
+    function UserResource($resource) {
+        var userResource = $resource('/api/users/:id', {
             _id: '@id'
         }, {
             update: {
@@ -16,11 +16,11 @@
             }
         });
 
-        UserResource.prototype.isAdmin  = function() {
+        userResource.prototype.isAdmin  = function() {
             return this.roles && this.roles.indexOf('admin') > -1;
         };
 
-        return UserResource;
+        return userResource;
     }
 
 })();

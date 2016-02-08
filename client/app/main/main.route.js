@@ -5,19 +5,19 @@
     .module('app.main')
     .run(routeConfig);
 
-    routeConfig.$inject = ['routehelper'];
-    function routeConfig(routehelper) {
+    routeConfig.$inject = ['RouterFactory'];
+    function routeConfig(RouterFactory) {
         var routes = [
             {
                 url: '/',
                 config: {
-                    templateUrl:'/app/main/content-main.html',
-                    controller: 'mvMainCtrl'
+                    templateUrl:'/app/main/main.html',
+                    controller: 'MainController'
                 }
             }
         ];
 
-        routehelper.configureRoutes(routes);
+        RouterFactory.configureRoutes(routes);
     }
 
 })();

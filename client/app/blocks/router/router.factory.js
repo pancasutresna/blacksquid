@@ -3,52 +3,22 @@
 
     angular
     .module('blocks.router')
-    .provider('routehelperConfig', routehelperConfig)
-    .factory('routehelper', routehelper);
+    .factory('RouterFactory', RouterFactory);
 
-    function routehelperConfig() {
-        this.config = {
-            // These are the properties we need to set
-            // $routeProvider: undefined
-            // docTitle: ''
-            // resolveAlways: {ready: function(){ } }
-        };
-
-        this.$get = function() {
-            return {
-                config: this.config
-            };
-        };
-    }
-
-    routehelper.$inject = ['$location', '$rootScope', '$route', 'logger', 'routehelperConfig', 'mvAuth'];
-    function routehelper($location, $rootScope, $route, logger, routehelperConfig, mvAuth) {
+    RouterFactory.$inject = ['$location', '$rootScope', '$route', 'LoggerFactory', 'RouterConfig'];
+    function RouterFactory($location, $rootScope, $route, LoggerFactory, RouterConfig) {
         var handlingRouteChangeError = false;
         var routeCounts = {
             errors: 0,
             changes: 0
         };
         var routes = [];
-        var $routeProvider = routehelperConfig.config.$routeProvider;
-
-        var routeRoleChecks = {
-            admin: {
-                auth: ['mvAuth', function(mvAuth) {
-                    return mvAuth.authorizeCurrentUserForRoute('admin');
-                }]
-            },
-            user: {
-                auth: ['mvAuth', function(mvAuth) {
-                    return mvAuth.authorizeAuthenticatedUserForRoute();
-                }]
-            }
-        };
+        var $routeProvider = RouterConfig.config.$routeProvider;
 
         /**
          * Define expossed services
          */
         var service = {
-            routeRoleChecks: routeRoleChecks,
             configureRoutes: configureRoutes,
             getRoutes: getRoutes,
             routeCounts: routeCounts
@@ -67,7 +37,7 @@
             routes.forEach(function(route) {
                 route.config.resolve =
                     angular.extend(route.config.resolve || {},
-                        routehelperConfig.config.resolveAlways);
+                        RouterConfig.config.resolveAlways);
                 $routeProvider.when(route.url, route.config);
             });
             $routeProvider.otherwise({redirectTo: '/'});
@@ -88,7 +58,7 @@
                     var destination = (current &&
                         (current.title || current.name || current.loadedTemplateUrl)) || 'unknown target';
                     var msg = 'Error routing to ' + destination + '. ' + (rejection.msg || '');
-                    logger.warning(msg, [current]);
+                    LoggerFactory.warning(msg, [current]);
                     $location.path('/');
                 }
             );
@@ -118,7 +88,7 @@
                 function(event, current, previous) {
                     routeCounts.changes++;
                     handlingRouteChangeError = false;
-                    var title = routehelperConfig.config.docTitle + ' ' + (current.title || '');
+                    var title = RouterConfig.config.docTitle + ' ' + (current.title || '');
                     $rootScope.title = title; // data bind to <title>
                 }
             );
