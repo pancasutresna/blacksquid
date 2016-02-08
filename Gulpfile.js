@@ -203,26 +203,33 @@ gulp.task('bump', function() {
 });
 
 /* ===========================================================================
- * This task will start server and serve production ready optimized code
- * =========================================================================== */
-gulp.task('serve-prod', ['optimize'], function() {
-    log($.util.colors.yellow('### SERV PRODUCTION BUILD ###'));
-    log($.util.colors.yellow('Serving production code....'));
-
-    // pass the value of is development is true, 
-    // mean it's production
-    serve(false); 
-});
-
-/* ===========================================================================
  * This task will start server and serve development code
  * =========================================================================== */
 gulp.task('serve-dev', ['inject'], function() {
     log($.util.colors.yellow('### SERV DEVELOPMENT BUILD ###'));
     log($.util.colors.yellow('Serving development code....'));
 
-    // pass the value of is development is true
-    serve(true); 
+    serve('development'); 
+});
+
+/* ===========================================================================
+ * This task will start server and serve development code
+ * =========================================================================== */
+gulp.task('serve-stage', ['optimize'], function() {
+    log($.util.colors.yellow('### SERV STAGING BUILD ###'));
+    log($.util.colors.yellow('Serving staging code....'));
+
+    serve('staging'); 
+});
+
+/* ===========================================================================
+ * This task will start server and serve production ready optimized code
+ * =========================================================================== */
+gulp.task('serve-prod', ['optimize'], function() {
+    log($.util.colors.yellow('### SERV PRODUCTION BUILD ###'));
+    log($.util.colors.yellow('Serving production code....'));
+
+    serve('production'); 
 });
 
 /* ###########################################################################
@@ -336,16 +343,18 @@ gulp.task('watch-scss', function() {
 
 ///////////////////////////////////////////////////////////
 
-function serve(isDev) {
+function serve(environment) {
     var nodeOptions = {
         script: config.nodeServer,
         delayTime: 1,
         env: {
             'PORT': port,
-            'NODE_ENV': isDev ? 'development' : 'production',
+            'NODE_ENV': environment,
         },
         watch: [config.server]
     };
+
+    var isDev = environment === 'development' ? true : false;
 
     // watch nodemon states  and perform necessary action 
     return $.nodemon(nodeOptions)
@@ -396,7 +405,6 @@ function startBrowserSync(isDev) {
         gulp.watch([config.sass], ['styles'])
             .on('change', function(event) { changeEvent(event); });
     } else {
-        // watching sass files
         gulp.watch([config.sass, config.js, config.html], ['optimize', browserSync.reload])
             .on('change', function(event) { changeEvent(event); });
     }

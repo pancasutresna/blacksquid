@@ -14,6 +14,10 @@ module.exports = function(app, config) {
     var oneDay = 86400000;
 
     switch (config.environment) {
+    case 'staging':
+        console.log('** SERVING STAGING BUILD **');
+        app.use('/', express.static(path.join(config.rootPath, 'build')));
+        break;
     case 'production':
         console.log('** SERVING PRODUCTION BUILD **');
         app.use('/', express.static(path.join(config.rootPath, 'build')));

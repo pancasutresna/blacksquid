@@ -32,6 +32,7 @@ module.exports = function(app, config) {
      */
     app.get('*', function(req, res) {
         switch (config.environment) {
+            case 'staging':
             case 'production':
                 res.sendFile(path.join(config.rootPath, 'build/index.html'));
                 break;
