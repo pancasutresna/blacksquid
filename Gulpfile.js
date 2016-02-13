@@ -4,7 +4,9 @@
  */
 
 var del         = require('del');
+var path        = require('path');
 var gulp        = require('gulp');
+var _           = require('lodash');
 var args        = require('yargs').argv;
 var browserSync = require('browser-sync');
 var config      = require('./gulp.config')();
@@ -15,13 +17,13 @@ var $           = require('gulp-load-plugins')({ lazy: true });
 /* ===========================================================================
  * Display all avaiable gulp tasks
  * =========================================================================== */
-gulp.task('help', $.taskListing.withFilters(/:/));
+//gulp.task('help', $.taskListing.withFilters(/:/));
 
 /* ===========================================================================
  * Perform default task when only 'gulp' command specified 
  * without task actions, which is calling the 'gulp help' command
  * =========================================================================== */
-gulp.task('default', ['help']);
+//gulp.task('default', ['help']);
 
 /* ===========================================================================
  * Run source code analyzer based on jshint and jscs specification files
@@ -130,12 +132,66 @@ gulp.task('inject', ['styles', 'templatecache'], function() {
         .pipe(gulp.dest(config.client));
 });
 
+gulp.task('build', ['optimize', 'images', 'fonts'], function() {
+    log($.util.colors.yellow('### BUILDING EVERYTHING ###'));
+
+    var msg = {
+        title: 'gulp config',
+        subtitle: 'Deployed to the build folder',
+        message: 'Running `gulp serve-build`'
+    };
+
+    del(config.temp);
+    log(msg);
+    notify(msg);
+});
+
+gulp.task('serve-specs', ['build-specs'], function(done) {
+    log('### RUN THE SPEC RUNNER ###');
+
+    serve('development', true);
+    done();
+});
+
+gulp.task('build-specs', ['templatecache'], function() {
+    log('### BUILDING THE SPEC RUNNER ###');
+
+    var wiredep = require('wiredep').stream;
+    var options = config.getWiredepDefaultOptions(); 
+    var specs = config.specs; 
+
+    options.devDependencies = true;
+
+    if (args.startServers) {
+        specs = [].concat(specs, config.serverIntergrationSpecs);
+    }
+
+    return gulp
+        .src(config.specRunner)
+        .pipe(wiredep(options))
+        .pipe($.inject(gulp.src(config.testLibraries),
+            {name: 'inject:testlibraries', read: false}))
+
+        .pipe($.inject(gulp.src(config.js)))
+        
+        .pipe($.inject(gulp.src(config.specHelpers),
+            {name: 'inject:spechelpers', read: false}))
+
+        .pipe($.inject(gulp.src(specs),
+            {name: 'inject:specs', read: false}))
+
+        .pipe($.inject(gulp.src(config.temp + config.templateCache.file),
+            {name: 'inject:templates', read: false}))
+
+        .pipe(gulp.dest(config.client));
+});
+
 /* ===========================================================================
  * This task perform optimize build for production ready code, including
  * injection to all needed assets (javascript, css and template cache) created
  * during the build.
  * =========================================================================== */
-gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
+gulp.task('optimize', ['inject', 'test'], function() {
     log($.util.colors.yellow('### TASK OPTIMIZE ###'));
     log($.util.colors.yellow('Optimizing assets and injecting templateCache....'));
 
@@ -225,11 +281,22 @@ gulp.task('serve-stage', ['optimize'], function() {
 /* ===========================================================================
  * This task will start server and serve production ready optimized code
  * =========================================================================== */
-gulp.task('serve-prod', ['optimize'], function() {
+gulp.task('serve-prod', ['build'], function() {
     log($.util.colors.yellow('### SERV PRODUCTION BUILD ###'));
     log($.util.colors.yellow('Serving production code....'));
 
     serve('production'); 
+});
+
+/* ===========================================================================
+ * Test Task
+ * =========================================================================== */
+gulp.task('test', ['inspect', 'templatecache'], function(done) {
+    startTests(true, done);
+});
+
+gulp.task('autotest', ['inspect', 'templatecache'], function(done) {
+    startTests(false, done);
 });
 
 /* ###########################################################################
@@ -326,24 +393,49 @@ gulp.task('watch-scss', function() {
     gulp.watch([config.sass], ['styles']);
 });
 
-/**
- * Copy client related files into dist directory for production
- */
-//gulp.task('build-client', ['inject'], function() {
-//    return gulp
-//        .src(config.assets)
-//        .pipe(gulp.dest(config.dist));
-//});
-
-//TODO: remove empty directory
-//gulp.task('clean-dist', function () {
-//    var files = config.dist + '**/*.*';
-//    return clean(files);
-//});
-
 ///////////////////////////////////////////////////////////
 
-function serve(environment) {
+function startTests(singleRun, done) {
+    var child;
+    var fork = require('child_process').fork;
+    var karma = require('karma').server;
+    var excludeFiles = [];
+    var serverSpecs = config.serverIntergrationSpecs; //TODO: 
+
+    if (args.startServers) { // gulp test --startServers
+        log('### STARTING SERVER ###');
+        var savedEnv = process.env;
+        savedEnv.NODE_ENV = 'dev';
+        savedEnv.PORT = 8888;
+        child = fork(config.nodeServer);
+    } else {
+        if(serverSpecs && serverSpecs.length) {
+            excludeFiles = serverSpecs;
+        }
+    }
+
+    karma.start({
+        configFile: __dirname + '/karma.conf.js',
+        exclude: excludeFiles,
+        singleRun: !!singleRun
+    }, karmaCompleted);
+
+    function karmaCompleted(karmaResult) {
+        log('### KARMA COMPLETED ###');
+        if (child) {
+            log('SHUTTING DOWN THE CHILD PROCESS');
+            child.kill();
+        }
+
+        if (karmaResult === 1) {
+            done('karma: tests failed with code ' + karmaResult);
+        } else {
+            done();
+        }
+    }
+}
+
+function serve(environment, specRunner) {
     var nodeOptions = {
         script: config.nodeServer,
         delayTime: 1,
@@ -371,7 +463,7 @@ function serve(environment) {
             log($.util.colors.green('### NODEMON STARTED ###'));
             log($.util.colors.green('Restarting nodemon....'));
 
-            startBrowserSync(isDev);
+            startBrowserSync(isDev, specRunner);
         })
         .on('crash', function() {
             log($.util.colors.red('### NODEMON CRASHED ###'));
@@ -387,11 +479,23 @@ function changeEvent(event) {
     log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
 }
 
+function notify(options) {
+    var notifier = require('node-notifier');
+    var notifyOptions = {
+        sound: 'Bottle',
+        contentImage: path.join(__dirname, 'gulp.png'),
+        icon: path.join(__dirname, 'gulp.png')
+    };
+
+    _.assign(notifyOptions, options);
+    notifier.notify(notifyOptions);
+}
+
 /**
  * Start browserSync
  * @return void
  */
-function startBrowserSync(isDev) {
+function startBrowserSync(isDev, specRunner) {
     var host = 'localhost:';
 
     // check if it's already running
@@ -430,6 +534,10 @@ function startBrowserSync(isDev) {
         notify: true,
         reloadDelay: 0
     };
+
+    if (specRunner) {
+        options.startPath = config.specRunnerFile;
+    }
 
     log($.util.colors.yellow('Starting browser-sync on port: ' + port));
 

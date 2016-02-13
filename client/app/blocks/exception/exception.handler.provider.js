@@ -3,10 +3,11 @@
 
     angular
     .module('blocks.exception')
-    .provider('ExceptionHandler', ExceptionHandler)
-    .config(handlerConfig);
+    .provider('ExceptionHandler', exceptionHandlerProvider)
+    .config(config);
 
-    function ExceptionHandler() {
+    function exceptionHandlerProvider() {
+        /* jshint validthis:true */
         this.config = {
             appErrorPrefix: undefined
         };
@@ -22,36 +23,36 @@
         };
     }
 
-    handlerConfig.$inject = ['$provide'];
-    function handlerConfig($provide) {
-        // extend default exceptionHandler
-        $provide.decorator('$exceptionHandler', extend);
+    config.$inject = ['$provide'];
+    function config($provide) {
+        // extendExceptionHandler default exceptionHandler
+        $provide.decorator('$exceptionHandler', extendExceptionHandler);
+    }
 
-        extend.$inject = ['$delegate', 'ExceptionHandler', 'LoggerFactory'];
-        function extend($delegate, ExceptionHandler, LoggerFactory) {
-            return function(exception, cause) {
-                var appErrorPrefix = ExceptionHandler.config.appErrorPrefix || '';
-                var errorData = {
-                    exception: exception,
-                    cause: cause
-                };
-                exception.message = appErrorPrefix + exception.message;
-
-                // call default exception handler
-                $delegate(exception, cause);
-
-                /**
-                 * Could add the error to a service's collection,
-                 * add errors to $rootScope, log errors to remote web server,
-                 * or log locally. Or throw hard. It is entirely up to you.
-                 * throw exception;
-                 *
-                 * @example
-                 *     throw { message: 'error message we added' };
-                 */
-                LoggerFactory.error(exception.message, errorData);
+    extendExceptionHandler.$inject = ['$delegate', 'ExceptionHandler', 'LoggerFactory'];
+    function extendExceptionHandler($delegate, ExceptionHandler, LoggerFactory) {
+        return function(exception, cause) {
+            var appErrorPrefix = ExceptionHandler.config.appErrorPrefix || '';
+            var errorData = {
+                exception: exception,
+                cause: cause
             };
-        }
+            exception.message = appErrorPrefix + exception.message;
+
+            // call default exception handler
+            $delegate(exception, cause);
+
+            /**
+             * Could add the error to a service's collection,
+             * add errors to $rootScope, log errors to remote web server,
+             * or log locally. Or throw hard. It is entirely up to you.
+             * throw exception;
+             *
+             * @example
+             *     throw { message: 'error message we added' };
+             */
+            LoggerFactory.error(exception.message, errorData);
+        };
     }
 
 })();
