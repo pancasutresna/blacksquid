@@ -3,10 +3,10 @@
 
     angular
     .module('blocks.router')
-    .factory('RouterFactory', RouterFactory);
+    .factory('RouterFactory', RouterFactoryProvider);
 
-    RouterFactory.$inject = ['$location', '$rootScope', '$route', 'LoggerFactory', 'RouterConfig'];
-    function RouterFactory($location, $rootScope, $route, LoggerFactory, RouterConfig) {
+    RouterFactoryProvider.$inject = ['$location', '$rootScope', '$route', 'LoggerFactory', 'RouterConfig'];
+    function RouterFactoryProvider($location, $rootScope, $route, LoggerFactory, RouterConfig) {
         var handlingRouteChangeError = false;
         var routeCounts = {
             errors: 0,
