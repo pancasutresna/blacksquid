@@ -16,10 +16,12 @@
         //////////////////////////////////
 
         function catcher(message) {
-            return function(reason) {
-                LoggerFactory.error(message, reason);
+            // what the hell is this for
+            return function() {
+                LoggerFactory.error(message);
             };
         }
+
     }
 
 })();
