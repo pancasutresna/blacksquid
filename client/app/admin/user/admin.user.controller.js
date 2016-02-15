@@ -6,12 +6,8 @@
 
     AdminUserController.$inject = ['$scope', 'UserResource'];
     function AdminUserController($scope, UserResource) {
-        
-        $scope.users = UserResource.query(
-            function () {
-                console.log('scope users: ' + $scope.users.length);
-            }
-        );
+
+        $scope.users = UserResource.query();
     }
 
 })();

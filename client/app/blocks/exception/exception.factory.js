@@ -17,8 +17,8 @@
 
         function catcher(message) {
             // what the hell is this for
-            return function() {
-                LoggerFactory.error(message);
+            return function(reason) {
+                LoggerFactory.error(message, reason);
             };
         }
 
