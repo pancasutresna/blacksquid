@@ -7,6 +7,7 @@
 
     PlaceDetailController.$inject = ['$scope', 'PlaceResourceCache', '$routeParams'];
     function PlaceDetailController($scope, PlaceResourceCache, $routeParams) {
+
         PlaceResourceCache.query().$promise.then(function(collection) {
             collection.forEach(function(place) {
                 if (place._id === $routeParams.id) {

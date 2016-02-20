@@ -1,6 +1,10 @@
 /* jshint -W117, -W030 */
 describe('AdminUserController', function() {
 
+    var scope, UserResource, ctrl, spy;
+    var RouterFactory;
+    var UserFactory;
+
     beforeEach(module('app.admin.user'));
 
     beforeEach(module(function($provide) {
@@ -18,32 +22,26 @@ describe('AdminUserController', function() {
         });
     }));
 
-    describe('Detail controller', function() {
+    beforeEach(inject(function($controller, $rootScope, _UserResource_, _RouterFactory_, _UserFactory_) {
+        scope = $rootScope.$new();
+        RouterFactory = _RouterFactory_;
+        UserFactory = _UserFactory_;
 
-        var scope, UserResource, ctrl, spy;
-        var RouterFactory;
-        var UserFactory;
+        UserResource = _UserResource_;
 
-        beforeEach(inject(function($controller, $rootScope, _UserResource_, _RouterFactory_, _UserFactory_) {
-            scope = $rootScope.$new();
-            RouterFactory = _RouterFactory_;
-            UserFactory = _UserFactory_;
-
-            UserResource = _UserResource_;
-
-            ctrl = $controller('AdminUserController', {
-                $scope: scope,
-                UserResource : UserResource
-            });
-        }));
-
-        it('should have a dummy test', function() {
-            expect(true).to.be.true;
+        ctrl = $controller('AdminUserController', {
+            $scope: scope,
+            UserResource : UserResource
         });
+    }));
 
-        it('should call UserResource.query', function() {
-            scope.user;
-            expect(UserResource.query.calledOnce).to.be.true;
-        });
+    it('should have a dummy test', function() {
+        expect(true).to.be.true;
     });
+
+    it('should call UserResource.query', function() {
+        scope.user;
+        expect(UserResource.query.calledOnce).to.be.true;
+    });
+
 });
