@@ -6,7 +6,7 @@
         <input ng-model="searchText" placeholder="Search" class="form-control"/>
       </div>
       <div class="form-group">
-        <select ng-model="sortOrder" ng-options="item.value as item.text for item in sortOptions" class="form-control"></select>
+        <select ng-model="sortOrder" ng-options="item.value as item.text for item in vm.sortOptions" class="form-control"></select>
       </div>
     </form>
   </div>
@@ -18,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="place in places | filter:searchText | orderBy: sortOrder">
+      <tr ng-repeat="place in vm.places | filter:searchText | orderBy: vm.sortOrder">
         <td> <a href="/places/{{ place._id }}">{{ place.title }}</a></td>
         <td>{{ place.published | date }}</td>
       </tr>

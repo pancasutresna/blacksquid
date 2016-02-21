@@ -3,7 +3,7 @@ describe('blocks.logger', function() {
 
     var $log;
     var toastr;
-    var LoggerFactory;
+    var logger;
 
     beforeEach(module('blocks.logger'));
 
@@ -24,35 +24,35 @@ describe('blocks.logger', function() {
 
     }));
 
-    beforeEach(inject(function(_$log_, _LoggerFactory_, _toastr_) {
+    beforeEach(inject(function(_$log_, _logger_, _toastr_) {
         $log = _$log_;
-        LoggerFactory = _LoggerFactory_;
+        logger = _logger_;
         toastr = _toastr_;
     }));
 
-    describe('LoggerFactory', function() {
+    describe('logger', function() {
         var message = 'Log this';
 
         it('should log error category message', function() {
-            LoggerFactory.error(message);
+            logger.error(message);
             expect($log.error.calledOnce).to.be.true;
             expect(toastr.error.calledOnce).to.be.true;
         });
 
         it('should log info category message', function() {
-            LoggerFactory.info(message);
+            logger.info(message);
             expect($log.info.calledOnce).to.be.true;
             expect(toastr.info.calledOnce).to.be.true;
         });
 
         it('should log success category message', function() {
-            LoggerFactory.success(message);
+            logger.success(message);
             expect($log.success.calledOnce).to.be.true;
             expect(toastr.success.calledOnce).to.be.true;
         });
 
         it('should log warning category message', function() {
-            LoggerFactory.warning(message);
+            logger.warning(message);
             expect($log.warn.calledOnce).to.be.true;
             expect(toastr.warning.calledOnce).to.be.true;
         });

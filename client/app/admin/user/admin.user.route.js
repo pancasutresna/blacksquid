@@ -5,21 +5,24 @@
         .module('app.admin.user')
         .run(routeConfig);
 
-    routeConfig.$inject = ['RouterFactory', 'UserFactory'];
-    function routeConfig(RouterFactory, UserFactory) {
+    /* @ngInject */
+    routeConfig.$inject = ['routehelper', 'UserFactory'];
+    function routeConfig(routehelper, UserFactory) {
+        routehelper.configureRoutes(getRoutes(UserFactory));
+    }
 
-        var routes = [
+    function getRoutes(UserFactory) {
+        return [
             {
                 url: '/admin/users',
                 config: {
                     templateUrl: '/app/admin/user/admin-user-list.html',
                     controller: 'AdminUserController',
+                    controllerAs: 'vm',
                     resolve: UserFactory.authorize.admin
                 }
             }
         ];
-
-        RouterFactory.configureRoutes(routes);
     }
 
 })();

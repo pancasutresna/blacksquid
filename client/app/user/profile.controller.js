@@ -5,8 +5,8 @@
     .module('app.user')
     .controller('ProfileController', ProfileController);
 
-    ProfileController.$inject = ['$scope', 'UserFactory', 'IdentityFactory', 'LoggerFactory'];
-    function ProfileController($scope, UserFactory, IdentityFactory, LoggerFactory) {
+    ProfileController.$inject = ['$scope', 'UserFactory', 'IdentityFactory', 'logger'];
+    function ProfileController($scope, UserFactory, IdentityFactory, logger) {
 
         $scope.email = IdentityFactory.currentUser.username;
         $scope.firstName = IdentityFactory.currentUser.firstName;
@@ -25,9 +25,9 @@
             }
 
             UserFactory.updateCurrentUser(newUserData).then(function() {
-                LoggerFactory.info('Your user account has been updated');
+                logger.info('Your user account has been updated');
             }, function(reason) {
-                LoggerFactory.error(reason);
+                logger.error(reason);
             });
         };
     }

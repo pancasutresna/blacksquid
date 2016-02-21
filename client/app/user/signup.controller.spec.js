@@ -14,24 +14,24 @@ describe('SignupController', function() {
             authorize: sinon.stub()
         });
 
-        $provide.value('LoggerFactory', {
+        $provide.value('logger', {
             info: sinon.stub(),
             error: sinon.stub()
         });
 
-        $provide.value('RouterFactory', {
+        $provide.value('routehelper', {
             configureRoutes: sinon.stub()
         });
     }));
 
     beforeEach(inject(function($controller, $rootScope, _UserFactory_,
-        _LoggerFactory_, _$location_, _RouterFactory_) {
+        _logger_, _$location_, _routehelper_) {
         scope = $rootScope.$new();
         UserFactory = _UserFactory_;
         controller = $controller('SignupController', {
             $scope: scope,
             UserFactory: UserFactory,
-            LoggerFactory: _LoggerFactory_,
+            logger: _logger_,
             $location: _$location_
         });
     }));

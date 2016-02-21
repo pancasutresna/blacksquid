@@ -2,7 +2,7 @@
 describe('AdminUserController', function() {
 
     var scope, UserResource, ctrl, spy;
-    var RouterFactory;
+    var routehelper;
     var UserFactory;
 
     beforeEach(module('app.admin.user'));
@@ -12,7 +12,7 @@ describe('AdminUserController', function() {
             query: sinon.stub()
         });
 
-        $provide.constant('RouterFactory', {
+        $provide.constant('routehelper', {
             configureRoutes: sinon.stub()
         });
         $provide.constant('UserFactory', {
@@ -22,9 +22,9 @@ describe('AdminUserController', function() {
         });
     }));
 
-    beforeEach(inject(function($controller, $rootScope, _UserResource_, _RouterFactory_, _UserFactory_) {
+    beforeEach(inject(function($controller, $rootScope, _UserResource_, _routehelper_, _UserFactory_) {
         scope = $rootScope.$new();
-        RouterFactory = _RouterFactory_;
+        routehelper = _routehelper_;
         UserFactory = _UserFactory_;
 
         UserResource = _UserResource_;

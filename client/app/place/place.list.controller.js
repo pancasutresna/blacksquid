@@ -5,16 +5,17 @@
     .module('app.place')
     .controller('PlaceListController', PlaceListController);
 
-    PlaceListController.$inject =  ['$scope', 'PlaceResourceCache'];
-    function PlaceListController($scope, PlaceResourceCache) {
-        $scope.places = PlaceResourceCache.query();
+    PlaceListController.$inject =  ['PlaceResourceCache'];
+    function PlaceListController(PlaceResourceCache) {
+        var vm = this;
+        vm.places = PlaceResourceCache.query();
 
-        $scope.sortOptions = [
+        vm.sortOptions = [
             {value: 'title', text: 'Sort by Title'},
             {value: 'published', text: 'Sort by publish data'}
         ];
 
-        $scope.sortOrder = $scope.sortOptions[0].value;
+        vm.sortOrder = vm.sortOptions[0].value;
     }
 
 })();

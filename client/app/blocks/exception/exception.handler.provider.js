@@ -3,10 +3,10 @@
 
     angular
     .module('blocks.exception')
-    .provider('ExceptionHandler', exceptionHandlerProvider)
-    .config(config);
+    .provider('exceptionConfig', exceptionConfigProvider)
+    .config(exceptionConfig);
 
-    function exceptionHandlerProvider() {
+    function exceptionConfigProvider() {
         /* jshint validthis:true */
         this.config = {
             appErrorPrefix: undefined
@@ -23,16 +23,16 @@
         };
     }
 
-    config.$inject = ['$provide'];
-    function config($provide) {
+    exceptionConfig.$inject = ['$provide'];
+    function exceptionConfig($provide) {
         // extendExceptionHandler default exceptionHandler
         $provide.decorator('$exceptionHandler', extendExceptionHandler);
     }
 
-    extendExceptionHandler.$inject = ['$delegate', 'ExceptionHandler', 'LoggerFactory'];
-    function extendExceptionHandler($delegate, ExceptionHandler, LoggerFactory) {
+    extendExceptionHandler.$inject = ['$delegate', 'exceptionConfig', 'logger'];
+    function extendExceptionHandler($delegate, exceptionConfig, logger) {
         return function(exception, cause) {
-            var appErrorPrefix = ExceptionHandler.config.appErrorPrefix || '';
+            var appErrorPrefix = exceptionConfig.config.appErrorPrefix || '';
             var errorData = {
                 exception: exception,
                 cause: cause
@@ -51,7 +51,7 @@
              * @example
              *     throw { message: 'error message we added' };
              */
-            LoggerFactory.error(exception.message, errorData);
+            logger.error(exception.message, errorData);
         };
     }
 

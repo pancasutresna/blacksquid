@@ -3,14 +3,14 @@ describe('LoginController', function() {
 
     var scope;
     var LoginController;
-    var RouterFactory;
-    var LoggerFactory;
+    var routehelper;
+    var logger;
     var UserFactory;
 
     beforeEach(module('app.user'));
 
     beforeEach(module(function($provide) {
-        $provide.constant('RouterFactory', {
+        $provide.constant('routehelper', {
             configureRoutes: sinon.stub()
         });
 
@@ -25,19 +25,19 @@ describe('LoginController', function() {
 
         $provide.constant('IdentityFactory', sinon.stub());
 
-        $provide.constant('LoggerFactory', {
+        $provide.constant('logger', {
             info: sinon.stub(),
             warning: sinon.stub()
         });
     }));
 
     beforeEach(inject(function($controller, $rootScope, _$http_, _$cookieStore_, _IdentityFactory_,
-        _LoggerFactory_, _UserFactory_, _$location_, _RouterFactory_) {
+        _logger_, _UserFactory_, _$location_, _routehelper_) {
 
         scope = $rootScope.$new();
-        RouterFactory = _RouterFactory_;
+        routehelper = _routehelper_;
         IdentityFactory = _IdentityFactory_;
-        LoggerFactory = _LoggerFactory_;
+        logger = _logger_;
         UserFactory = _UserFactory_;
 
         LoginController = $controller('LoginController', {
@@ -45,7 +45,7 @@ describe('LoginController', function() {
             $http: _$http_,
             $cookieStore: _$cookieStore_,
             IdentityFactory: _IdentityFactory_,
-            LoggerFactory: _LoggerFactory_,
+            logger: _logger_,
             UserFactory: UserFactory,
             $location: _$location_
         });

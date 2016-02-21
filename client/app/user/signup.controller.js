@@ -5,8 +5,8 @@
     .module('app.user')
     .controller('SignupController', SignupController);
 
-    SignupController.$inject = ['$scope', 'UserFactory', 'LoggerFactory', '$location'];
-    function SignupController($scope, UserFactory, LoggerFactory, $location) {
+    SignupController.$inject = ['$scope', 'UserFactory', 'logger', '$location'];
+    function SignupController($scope, UserFactory, logger, $location) {
 
         $scope.signup = function() {
             var newUserData = {
@@ -17,10 +17,10 @@
             };
 
             UserFactory.createUser(newUserData).then(function() {
-                LoggerFactory.info('New user created!');
+                logger.info('New user created!');
                 $location.path('/');
             }, function(reason) {
-                LoggerFactory.error(reason);
+                logger.error(reason);
             });
         };
     }

@@ -3,17 +3,38 @@
 
     angular
     .module('blocks.router')
-    .factory('RouterFactory', RouterFactoryProvider);
+    .provider('routehelperConfig', routehelperConfig)
+    .factory('routehelper', routehelper);
 
-    RouterFactoryProvider.$inject = ['$location', '$rootScope', '$route', 'LoggerFactory', 'RouterConfig'];
-    function RouterFactoryProvider($location, $rootScope, $route, LoggerFactory, RouterConfig) {
+    function routehelperConfig() {
+        /* jshint validthis:true */
+        this.config = {
+            // These are the properties we need to set
+            $routeProvider: undefined,
+            docTitle: '',
+            resolveAlways: {ready: function() {}}
+        };
+
+        this.$get = function() {
+            return {
+                config: this.config
+            };
+        };
+    }
+
+    routehelper.$inject = [
+        '$location', '$rootScope', '$route',
+        'logger', 'routehelperConfig'
+    ];
+    function routehelper($location, $rootScope, $route,
+        logger, routehelperConfig) {
         var handlingRouteChangeError = false;
         var routeCounts = {
             errors: 0,
             changes: 0
         };
         var routes = [];
-        var $routeProvider = RouterConfig.config.$routeProvider;
+        var $routeProvider = routehelperConfig.config.$routeProvider;
 
         /**
          * Define expossed services
@@ -37,7 +58,7 @@
             routes.forEach(function(route) {
                 route.config.resolve =
                     angular.extend(route.config.resolve || {},
-                        RouterConfig.config.resolveAlways);
+                        routehelperConfig.config.resolveAlways);
                 $routeProvider.when(route.url, route.config);
             });
             $routeProvider.otherwise({redirectTo: '/'});
@@ -58,7 +79,7 @@
                     var destination = (current &&
                         (current.title || current.name || current.loadedTemplateUrl)) || 'unknown target';
                     var msg = 'Error routing to ' + destination + '. ' + (rejection.msg || '');
-                    LoggerFactory.warning(msg, [current]);
+                    logger.warning(msg, [current]);
                     $location.path('/');
                 }
             );
@@ -88,7 +109,7 @@
                 function(event, current, previous) {
                     routeCounts.changes++;
                     handlingRouteChangeError = false;
-                    var title = RouterConfig.config.docTitle + ' ' + (current.title || '');
+                    var title = routehelperConfig.config.docTitle + ' ' + (current.title || '');
                     $rootScope.title = title; // data bind to <title>
                 }
             );

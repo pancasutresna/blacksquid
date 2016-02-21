@@ -1,29 +1,29 @@
 /* jshint -W117, -W030 */
 describe('blocks.exception', function() {
 
-    var ExceptionFactory;
-    var LoggerFactory;
+    var exception;
+    var logger;
 
     beforeEach(module('blocks.exception'));
 
     beforeEach(module(function($provide) {
-        $provide.constant('LoggerFactory', {
+        $provide.constant('logger', {
             error: sinon.spy()
         });
     }));
 
-    beforeEach(inject(function(_ExceptionFactory_, _LoggerFactory_) {
-        ExceptionFactory = _ExceptionFactory_;
-        LoggerFactory = _LoggerFactory_;
+    beforeEach(inject(function(_exception_, _logger_) {
+        exception = _exception_;
+        logger = _logger_;
     }));
 
-    describe('ExceptionFactory', function() {
+    describe('exception', function() {
         it('should exist', function() {
-            expect(ExceptionFactory).to.exist;
+            expect(exception).to.exist;
         });
 
-        it('should contain LoggerFactory', function() {
-            expect(LoggerFactory).to.exist;
+        it('should contain logger', function() {
+            expect(logger).to.exist;
         });
     });
 });

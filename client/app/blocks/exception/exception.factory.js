@@ -3,10 +3,10 @@
 
     angular
     .module('blocks.exception')
-    .factory('ExceptionFactory', ExceptionFactory);
+    .factory('exception', exception);
 
-    ExceptionFactory.$inject = ['LoggerFactory'];
-    function ExceptionFactory(LoggerFactory) {
+    exception.$inject = ['logger'];
+    function exception(logger) {
         var service = {
             catcher: catcher
         };
@@ -18,7 +18,7 @@
         function catcher(message) {
             // what the hell is this for
             return function(reason) {
-                LoggerFactory.error(message, reason);
+                logger.error(message, reason);
             };
         }
 

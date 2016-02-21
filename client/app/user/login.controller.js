@@ -5,28 +5,28 @@
     .module('app.user')
     .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$scope', '$http', '$cookieStore', 'IdentityFactory',
-    'LoggerFactory', 'UserFactory', '$location'];
-    function LoginController($scope, $http, $cookieStore, IdentityFactory,
-        LoggerFactory, UserFactory, $location) {
-
-        $scope.identity = IdentityFactory;
-        $scope.signin = function(username, password) {
+    LoginController.$inject = ['$http', '$cookieStore', 'IdentityFactory',
+    'logger', 'UserFactory', '$location'];
+    function LoginController($http, $cookieStore, IdentityFactory,
+        logger, UserFactory, $location) {
+        var vm = this;
+        vm.identity = IdentityFactory;
+        vm.signin = function(username, password) {
             UserFactory.authenticateUser(username, password).then(function(success) {
                 if (success) {
-                    LoggerFactory.info('You have successfully signed in!');
+                    logger.info('You have successfully signed in!');
                 } else {
-                    LoggerFactory.warning('Username/password combination incorrent');
+                    logger.warning('Username/password combination incorrent');
                 }
             });
         };
 
-        $scope.signout = function() {
+        vm.signout = function() {
             UserFactory.logoutUser().then(function() {
                 $cookieStore.remove('bootstrappedUser');
-                $scope.username = '';
-                $scope.password = '';
-                LoggerFactory.info('You have successfully signed out!');
+                vm.username = '';
+                vm.password = '';
+                logger.info('You have successfully signed out!');
                 $location.path('/');
             });
         };

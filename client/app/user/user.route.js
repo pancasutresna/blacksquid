@@ -5,26 +5,28 @@
     .module('app.user')
     .run(routeConfig);
 
-    routeConfig.$inject = ['RouterFactory', 'UserFactory'];
-    function routeConfig(RouterFactory, UserFactory) {
+    routeConfig.$inject = ['routehelper', 'UserFactory'];
+    function routeConfig(routehelper, UserFactory) {
         var routes = [
             {
                 url: '/signup',
                 config: {
                     templateUrl:'/app/user/form-signup.html',
-                    controller: 'SignupController'
+                    controller: 'SignupController',
+                    controllerAs: 'vm'
                 }
             }, {
                 url: '/profile',
                 config: {
                     templateUrl: '/app/user/form-profile.html',
                     controller: 'ProfileController',
+                    controllerAs: 'vm',
                     resolve: UserFactory.authorize.user
                 }
             }
         ];
 
-        RouterFactory.configureRoutes(routes);
+        routehelper.configureRoutes(routes);
     }
 
 })();
