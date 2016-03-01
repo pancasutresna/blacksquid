@@ -1,0 +1,41 @@
+{
+  "name": "breezejs",
+  "version": "1.5.3",
+  "description": "RETIRED. Install 'breeze-client' and 'breeze-client-labs' packages instead.",
+  "keywords": [
+    "breeze",
+    "javascript",
+    "framework"
+  ],
+  "homepage": "http://www.getbreezenow.com/breezejs",
+  "bugs": {
+    "url": "http://stackoverflow.com/questions/tagged/breeze"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "IdeaBlade",
+    "url": "http://www.ideablade.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Breeze/breeze.js.bower.git"
+  },
+  "main": [
+    "breeze.debug.js"
+  ],
+  "ignore": [
+    "getLibs.cmd",
+    "package.json",
+    ".npmignore"
+  ],
+  "_release": "1.5.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.5.3",
+    "commit": "a55b9349311b96b19287d15d29754b54f432a8e0"
+  },
+  "_source": "git://github.com/Breeze/breeze.js.bower.git",
+  "_target": "^1.5.3",
+  "_originalSource": "breezejs",
+  "_direct": true
+}

@@ -10,5 +10,4 @@
         vm.users = UserResource.query();
     }
 
-
 })();
