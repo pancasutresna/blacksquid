@@ -24,7 +24,10 @@
     "angular-cookies": "~1.4.9",
     "angular-mocks": "~1.5.0",
     "angular-bootstrap": "^1.2.1",
-    "breezejs": "^1.5.3"
+    "breezejs": "^1.5.3",
+    "angular.breeze.storagewip": "~1.0.3",
+    "extras.angular.plus": "^0.9.0",
+    "angular-ui-bootstrap-bower": "~0.11.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.9",
@@ -33,5 +36,17 @@
   "resolutions": {
     "angular": "~1.4.8",
     "angular-mocks": "~1.4.9"
+  },
+  "overrides": {
+    "breezejs": {
+      "main": [
+        "breeze.debug.js",
+        "adapters/breeze.dataService.mongo.js",
+        "labs/breeze.angular.js",
+        "labs/breeze.directives.js",
+        "labs/breeze.metadata-helper.js",
+        "labs/breeze.saveErrorExtensions.js"
+        ]
+    }
   }
 }

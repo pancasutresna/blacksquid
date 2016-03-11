@@ -13,12 +13,12 @@
         'blocks.exception', 'blocks.logger', 'blocks.router',
 
         /*
-         * 3rd party modules
+         * 3rd Party modules
          */
-         'ui.bootstrap',
-         'breeze.angular',
-         'breeze.directives',
-         'ngplus',
-         'ngzWip'
+        'ui.bootstrap',     // ui-bootstrap (ex: carousel, pagination, dialog)
+        'breeze.angular',   // tells breeze to use $q instead of Q.js
+        'breeze.directives',// breeze validation directive (zValidate)
+        'ngplus',           // ngplus utilities
+        'ngzWip'            // zStorage and zStorageWip
     ]);
 })();
