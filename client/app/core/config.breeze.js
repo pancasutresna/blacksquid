@@ -1,3 +1,4 @@
+/* global breeze:false */
 (function() {
     'use strict';
 
@@ -90,7 +91,7 @@
             // zStorageWip
             wipKey: 'CCAngularBreeze.wip',
             appErrorPrefix: config.appErrorPrefix,
-            newGuid: breeze.core.getUuid, // TODO: global potentially variables 
+            newGuid: breeze.core.getUuid,
 
             // zStorageCore
             version: config.version

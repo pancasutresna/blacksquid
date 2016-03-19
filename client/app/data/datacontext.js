@@ -6,7 +6,7 @@
         .factory('datacontext', datacontext);
 
     datacontext.$inject = [
-        '$injector', '$rootScope', 
+        '$injector', '$rootScope',
         'breeze', 'common', 'config', 'entityManagerFactory',
         'exception', 'model', 'zStorage', 'zStorageWip'
     ];
@@ -51,8 +51,8 @@
             listenForStorageEvents();
         }
 
-        function calcel() {
-            if(manager.hasChanges()) {
+        function cancel() {
+            if (manager.hasChanges()) {
                 manager.rejectChanges();
                 common.logger.success('Canceled changes');
             }
@@ -87,7 +87,7 @@
             return factory.create(manager);
         }
 
-        function listenForStorageEvent() {
+        function listenForStorageEvents() {
             $rootScope.$on(config.events.storage.storeChanged, function(event, data) {
                 common.logger.info('Updated local storage', data);
             });
@@ -107,17 +107,17 @@
 
         function prime() {
             // There are many paths through here, all must return a promise.
-            
+
             // This function can only be called once.
-            if(primePromise) {
+            if (primePromise) {
                 return primePromise;
             }
 
             // look in local storage, if data is here
             // grab it. otherwise get from 'resources'
             var storageEnabledAndHasData = zStorage.load(manager);
-            var promise = storageEnabledAndHasData ? 
-                $q.when(common.logger.info('Loading entities and metadata from local storage')) : 
+            var promise = storageEnabledAndHasData ?
+                $q.when(common.logger.info('Loading entities and metadata from local storage')) :
                 loadLookupsFromRemote();
 
             primePromise = promise.then(success);
@@ -130,7 +130,7 @@
                     // got metadata from remote service; now extend it
                     promise = promise.then(function() {
                         model.extendMetadata(manager.metadataStore);
-                    };
+                    });
                 }
 
                 return promise.then(function() {
@@ -168,7 +168,7 @@
             }
 
             function saveFailed(error) {
-                var msg = 'Save failed: ' + 
+                var msg = 'Save failed: ' +
                     breeze.saveErrorMessageService.getErrorMessage(error);
                 error.message = msg;
                 exception.catcher(msg)(error);
