@@ -7,15 +7,21 @@
         .module('app.data')
         .factory('model', model);
 
+    //TODO: standardize the names with dashes and their filenames
     model.$inject = ['breeze', 'model-metadata', 'model-validation', 'moment'];
-    function model(breeze, manualMetadata, modelValidation, moment) {
 
+    function model(breeze, manualMetadata, modelValidation, moment) {
         var nulloDate = new Date(1900, 0, 1);
         var nullosExist = false;
 
         var entityNames = {
-            user: 'Person',
-            place: 'Place'
+            attendee: 'Person',
+            person: 'Person',
+            speaker: 'Person',
+            session: 'Session',
+            room: 'Room',
+            track: 'Track',
+            timeslot: 'TimeSlot'
         };
 
         var service = {
@@ -28,9 +34,13 @@
 
         return service;
 
+        //#region internal methods
         function configureMetadataStore(metadataStore) {
+            // Pass the Type, Ctor (breeze tracks properties created here), and initializer
+            // Assume a Session or Person is partial by default
+            registerSession(metadataStore);
             registerPerson(metadataStore);
-            registerPlace(metadataStore);
+            registerTimeSlot(metadataStore);
 
             modelValidation.createAndRegister(entityNames);
 
@@ -49,12 +59,13 @@
             if (nullosExist) {
                 return;
             }
-
             nullosExist = true;
             var unchanged = breeze.EntityState.Unchanged;
 
-            createNullo(entityNames.user, {firstName: ' [Select a person]'}); // TODO: come back to this
-            createNullo(entityNames.place);
+            createNullo(entityNames.timeslot, {start: nulloDate, isSessionSlot: true});
+            createNullo(entityNames.room);
+            createNullo(entityNames.speaker, {firstName: ' [Select a person]'});
+            createNullo(entityNames.track);
 
             function createNullo(entityName, values) {
                 var initialValues = values || {name: ' [Select a ' + entityName.toLowerCase() + ']'};
@@ -73,7 +84,7 @@
             });
 
             var personEntityName = entityNames.person;
-            ['User'].forEach(function(r) {
+            ['Speakers', 'Speaker', 'Attendees', 'Attendee'].forEach(function(r) {
                 set(r, personEntityName);
             });
 
@@ -82,10 +93,29 @@
             }
         }
 
+        function registerSession(metadataStore) {
+            metadataStore.registerEntityTypeCtor('Session', Session);
+
+            function Session() {
+                this.isPartial = false; // presume full session objects until informed otherwise
+            }
+
+            Object.defineProperty(Session.prototype, 'tagsFormatted', {
+                get: function() {
+                    return this.tags ? this.tags.replace(/\|/g, ', ') : this.tags;
+                },
+                set: function(value) {
+                    this.tags = value.replace(/\, /g, '|');
+                }
+            });
+        }
+
         function registerPerson(metadataStore) {
             metadataStore.registerEntityTypeCtor('Person', Person);
 
             function Person() {
+                this.isPartial = false;
+                this.isSpeaker = false;
             }
 
             Object.defineProperty(Person.prototype, 'fullName', {
@@ -95,17 +125,28 @@
                     return ln ? fn + ' ' + ln : fn;
                 }
             });
+
         }
 
-        function registerPlace(metadataStore) {
-            metadataStore.registerEntityTypeCtor('Place', Place);
+        function registerTimeSlot(metadataStore) {
+            metadataStore.registerEntityTypeCtor(
+                'TimeSlot', TimeSlot);
 
-            function Place() {
+            function TimeSlot() {
             }
 
-            // TODO: we'll be back here soon
-            Object.defineProperty(Place.prototype);
+            Object.defineProperty(TimeSlot.prototype, 'name', {
+                get: function() {
+                    var start = this.start;
+                    var value = ((start - nulloDate) === 0) ?
+                        ' [Select a timeslot]' :
+                        (start && moment.utc(start).isValid()) ?
+                            moment.utc(start).format('ddd hh:mm a') : '[Unknown]';
+                    return value;
+                }
+            });
         }
 
+        //#endregion
     }
 })();

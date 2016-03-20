@@ -12,10 +12,8 @@
     ];
 
     function datacontext(
-            $injector, $rootScope, breeze, common, config, emFactory,
-            exception, model, zStorage, zStorageWip
-        ) {
-
+        $injector, $rootScope, breeze, common, config, emFactory,
+        exception, model, zStorage, zStorageWip) {
         var manager = emFactory.newManager();
         var isPrimed = false;
         var primePromise;
@@ -28,9 +26,9 @@
             markDeleted: markDeleted,
             ready: ready,
             save: save,
-            // sub-service
+            // sub-services
             zStorage: zStorage,
-            zStorageWip: zStorageWip,
+            zStorageWip: zStorageWip
             // Repositories to be added by defineLazyLoadedRepos
             //      attendees
             //      lookups
@@ -91,11 +89,9 @@
             $rootScope.$on(config.events.storage.storeChanged, function(event, data) {
                 common.logger.info('Updated local storage', data);
             });
-
             $rootScope.$on(config.events.storage.wipChanged, function(event, data) {
-                common.logger.info('UPdated WIP', data);
+                common.logger.info('Updated WIP', data);
             });
-
             $rootScope.$on(config.events.storage.error, function(event, data) {
                 common.logger.error('Error with local storage. ' + data.activity, data);
             });
@@ -113,7 +109,7 @@
                 return primePromise;
             }
 
-            // look in local storage, if data is here
+            // look in local storage, if data is here,
             // grab it. otherwise get from 'resources'
             var storageEnabledAndHasData = zStorage.load(manager);
             var promise = storageEnabledAndHasData ?
@@ -132,7 +128,6 @@
                         model.extendMetadata(manager.metadataStore);
                     });
                 }
-
                 return promise.then(function() {
                     zStorage.save();
                 });
@@ -148,10 +143,10 @@
             var readyPromise = primePromise || prime();
 
             return readyPromise
-                    .then(function() {
-                        return $q.all(nextPromises);
-                    })
-                    .catch(exception.catcher('"ready" function failed'));
+                .then(function() {
+                    return $q.all(nextPromises);
+                })
+                .catch(exception.catcher('"ready" function failed'));
         }
 
         function save() {
@@ -178,12 +173,13 @@
         }
 
         //#region Internal methods
+
         function setupEventForEntitiesChanged() {
             // We use this for detecting changes of any kind so we can save them to local storage
             manager.entityChanged.subscribe(function(changeArgs) {
                 if (changeArgs.entityAction === breeze.EntityAction.PropertyChange) {
                     interceptPropertyChange(changeArgs);
-                    common.$boardcast(config.events.entitiesChanged, changeArgs);
+                    common.$broadcast(config.events.entitiesChanged, changeArgs);
                 }
             });
         }
@@ -206,7 +202,6 @@
         // entity from the server.
         // Ultimately, we do not want to track changes to these properties,
         // so we remove them.
-
         function interceptPropertyChange(changeArgs) {
             var changedProp = changeArgs.args.propertyName;
             if (changedProp === 'isPartial' || changedProp === 'isSpeaker') {

@@ -6,7 +6,7 @@
         .factory('entityManagerFactory', emFactory);
 
     emFactory.$inject = ['breeze.config', 'model'];
-    /* @ngInject */
+
     function emFactory(breezeConfig, model) {
         var breeze = breezeConfig.breeze;
 
@@ -26,7 +26,6 @@
             if (model.useManualMetadata) {
                 store.addDataService(new breeze.DataService({serviceName: serviceName}));
             }
-
             return store;
         }
 
@@ -35,9 +34,7 @@
                 serviceName: serviceName,
                 metadataStore: metadataStore
             });
-
             return mgr;
         }
     }
-
 })();

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -8,7 +8,7 @@
     RepositoryAttendee.$inject = ['breeze', 'model', 'repository.abstract'];
 
     function RepositoryAttendee(breeze, model, AbstractRepository) {
-        var attendeesQuery = breeze.EntityQuery.from('Person');
+        var attendeesQuery = breeze.EntityQuery.from('Persons');
         var entityName = model.entityNames.attendee;
         var orderBy = 'firstName, lastName';
 
@@ -35,7 +35,7 @@
             }
 
             function getAll(forceRemote, page, size, nameFilter) {
-                // only return a page worth of attendees
+                // Only return a page worth of attendees
                 var take = size || 20;
                 var skip = page ? (page - 1) * size : 0;
 
@@ -76,6 +76,7 @@
 
                     return attendees;
                 }
+
             }
 
             function getCount() {
@@ -85,13 +86,11 @@
                 if (count !== undefined) {
                     return base.$q.when(count);
                 }
-
                 // Attendees aren't loaded and don't have a count yet;
                 // ask the server for a count and remember it
-
                 return attendeesQuery.take(0).inlineCount()
                     .using(base.manager).execute()
-                    .then(function(data) {
+                    .then(function (data) {
                         count = data.inlineCount;
                         return count;
                     });
@@ -99,7 +98,7 @@
 
             function getFilteredCount(nameFilter) {
                 var predicate = breeze.Predicate
-                    .and(base.predicated.isNotNullo)
+                    .and(base.predicates.isNotNullo)
                     .and(fullNamePredicate(nameFilter));
 
                 var attendees = attendeesQuery

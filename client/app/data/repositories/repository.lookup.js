@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -15,14 +15,13 @@
             create: createRepo // factory function to create the repository
         };
 
-        ///////////////////////////
-
+        /* Implementation */
         function createRepo(manager) {
             var base = new AbstractRepository(manager, entityName);
-            var cacheLookups;
+            var cachedLookups;
             var repo = {
                 getAll: getAll,
-                get cacheData() {
+                get cachedData() {
                     return getCachedLookups();
                 } // shortcut 'getter' syntax
             };
@@ -43,14 +42,14 @@
             }
 
             function getCachedLookups() {
-                if (!cacheLookups) {
-                    cacheLookups = {
+                if (!cachedLookups) {
+                    cachedLookups = {
                         rooms: base.getAllLocal(entityNames.room, 'name'),
-                        track: base.getAllLocal(entityNames.track, 'name'),
-                        timelots: base.getAllLocal(entityNames.timelot, 'start')
+                        tracks: base.getAllLocal(entityNames.track, 'name'),
+                        timeslots: base.getAllLocal(entityNames.timeslot, 'start')
                     };
                 }
-                return cacheLookups;
+                return cachedLookups;
             }
         }
     }

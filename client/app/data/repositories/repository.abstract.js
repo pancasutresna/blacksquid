@@ -6,24 +6,23 @@
         .factory('repository.abstract', AbstractRepository);
 
     AbstractRepository.$inject = ['breeze', 'common', 'zStorage', 'zStorageWip'];
-    /* @ngInject */
+
     function AbstractRepository(breeze, common, zStorage, zStorageWip) {
         /* jshint validthis:true */
         var predicates = {
             isNotNullo: breeze.Predicate.create('id', '!=', 0),
             isNullo: breeze.Predicate.create('id', '==', 0)
         };
-
         var $q = common.$q;
 
         function Ctor(entityManager, entityName) {
-            // instance member that are stateful
+            // instance members that are stateful
             this.entityName = entityName;
             this.getById = getById.bind(this);
             this.getEntityByIdOrFromWip = getEntityByIdOrFromWip.bind(this);
             this.logger = common.logger;
             this.manager = entityManager;
-            this.queryFailed = queryFailed.bind(this);
+            this.queryFailed = queryFailed.bind(this); // Bind to self so we establish 'this' as the context
         }
 
         /* stateless methods that can be shared across all repos */
@@ -31,7 +30,7 @@
             constructor: Ctor,
             $q: $q,
             getAllLocal: getAllLocal,
-            getLocalENtityCount: getLocalEntityCount,
+            getLocalEntityCount: getLocalEntityCount,
             predicates: predicates,
             setIsPartialTrue: setIsPartialTrue,
             zStorage: zStorage,
@@ -40,7 +39,7 @@
 
         return Ctor;
 
-        ////////////////////////////////////
+        /* Implementation */
 
         function getAllLocal(resource, ordering, predicate) {
             return breeze.EntityQuery.from(resource)
@@ -60,10 +59,9 @@
                 if (entity && !entity.isPartial) {
                     self.logger.info('Retrieved [' + entityName + '] id:' + entity.id + ' from cache.', entity);
                     if (entity.entityAspect.entityState.isDeleted()) {
-                        entity = null;
+                        entity = null; // hide session marked-for-delete
                     }
-
-                    //Should not need to call $apply because it is synchronous
+                    // Should not need to call $apply because it is synchronous
                     return $q.when(entity);
                 }
             }
@@ -72,7 +70,7 @@
             // fetchEntityByKey will go remote because
             // 3rd parm is false/undefined.
             return manager.fetchEntityByKey(entityName, id)
-                    .then(querySucceeded).catch(self.queryFailed);
+                .then(querySucceeded).catch(self.queryFailed);
 
             function querySucceeded(data) {
                 entity = data.entity;
@@ -90,12 +88,12 @@
         function getEntityByIdOrFromWip(val) {
             var self = this;
             var entityName = self.entityName;
-            // val could be an ID or a wipkey
+            // val could be an ID or a wipKey
             var wipEntityKey = val;
 
             if (common.isNumber(val)) {
                 val = parseInt(val);
-                wipEntityKey = zStorageWip.findWipEntityKeyById(entityName, val);
+                wipEntityKey = zStorageWip.findWipKeyByEntityId(entityName, val);
                 if (!wipEntityKey) {
                     // Returns a promise with the entity because
                     // the entity may be in storagelocal or remote (async).
@@ -113,7 +111,6 @@
             } else {
                 self.logger.info('Could not find [' + entityName + '] id in WIP:' + wipEntityKey, null);
             }
-
             return $q.when(wipResult);
         }
 
@@ -122,7 +119,6 @@
                 .where(predicates.isNotNullo)
                 .using(this.manager)
                 .executeLocally();
-
             return entities.length;
         }
 
@@ -137,7 +133,6 @@
             for (var i = entities.length; i--;) {
                 entities[i].isPartial = true;
             }
-
             return entities;
         }
     }

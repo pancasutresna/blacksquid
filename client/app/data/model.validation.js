@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -7,7 +7,7 @@
 
     //TODO: standardize the names with dashes and their filenames
     modelValidation.$inject = ['breeze', 'common'];
-    /* @ngInject */
+
     function modelValidation(breeze, common) {
         var entityNames;
         var logger = common.logger;
@@ -21,8 +21,6 @@
         };
 
         return service;
-
-        /////////////////////////////////////////////////
 
         function applyValidators(metadataStore) {
             applyRequireReferenceValidators(metadataStore);
@@ -49,9 +47,8 @@
             entityType.getProperty('email').validators.push(Validator.emailAddress());
         }
 
-        // TODO: we'll come back here soon
         function applyRequireReferenceValidators(metadataStore) {
-            var navigations = ['place', 'user'];
+            var navigations = ['room', 'track', 'timeSlot', 'speaker'];
             var entityType = metadataStore.getEntityType(entityNames.session);
 
             navigations.forEach(function (propertyName) {
@@ -75,7 +72,6 @@
                 'twitter',
                 /^@([a-zA-Z]+)([a-zA-Z0-9_]+)$/,
                 'Invalid Twitter User Name: "%value%"');
-
             return val;
         }
 
